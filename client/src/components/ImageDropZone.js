@@ -28,7 +28,6 @@ export default function ImageDropZone(){
       // TODO: send files to the compress api
       setImages([])
     }
-    console.log(images)
     return(
         <div>
            <DropzoneArea
