@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
 
-app.get('/hello-world',(req,res)=>{
-    res.send("Hello World")
+app.get('/time',(req,res)=>{
+    let time = new Date().toString();
+    res.send(time)
 })
 
 const PORT = process.env.PORT || 3001
