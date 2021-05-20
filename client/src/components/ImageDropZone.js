@@ -24,10 +24,22 @@ export default function ImageDropZone(){
       setImages(file)
       //console.log(images[images.length-1])
     }
-    function handleCompress(){
+    async function handleCompress(){
       // TODO: send files to the compress api
-      setImages([])
+      let formData = new FormData();
+      for(let i=0; i<images.length;i++){
+        formData.append('images',images[i])
+      }
+      let response = await fetch('/compress',{
+        method:"POST",
+        body:formData
+      })
+      let data =  await response.text();
+      console.log(data)
+      //console.log(images)
+      setImages([]);
     }
+
     return(
         <div>
            <DropzoneArea

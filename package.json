@@ -6,17 +6,25 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^6.1.0",
+    "core-js": "^3.12.1",
     "express": "^4.17.1",
-    "imagemin": "^8.0.0",
+    "imagemin": "^7.0.1",
     "imagemin-jpegtran": "^7.0.0",
     "imagemin-pngquant": "^9.0.2",
-    "multer": "^1.4.2"
+    "multer": "^1.4.2",
+    "regenerator-runtime": "^0.13.7"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.14.3",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "nodemon": "^2.0.7"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel server.js -d dist",
     "start": "concurrently \"npm run server\" \" cd client && npm start\"",
-    "server": "node server.js"
+    "server": "npm run build && nodemon dist/server.js"
   },
   "author": "Iftekhar Riyad",
   "license": "ISC"
