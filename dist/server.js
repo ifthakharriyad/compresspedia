@@ -10,13 +10,19 @@ var _bodyParser = _interopRequireDefault(require("body-parser"));
 
 var _multer = _interopRequireDefault(require("multer"));
 
-var _imagemin = _interopRequireDefault(require("imagemin"));
+var _path = _interopRequireDefault(require("path"));
 
-var _imageminJpegtran = _interopRequireDefault(require("imagemin-jpegtran"));
+var _imagemin = _interopRequireDefault(require("imagemin"));
 
 var _imageminPngquant = _interopRequireDefault(require("imagemin-pngquant"));
 
-var _path = _interopRequireDefault(require("path"));
+var _imageminMozjpeg = _interopRequireDefault(require("imagemin-mozjpeg"));
+
+var _imageminGiflossy = _interopRequireDefault(require("imagemin-giflossy"));
+
+var _imageminSvgo = _interopRequireDefault(require("imagemin-svgo"));
+
+var _svgo = require("svgo");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -43,29 +49,44 @@ var storage = _multer["default"].diskStorage({
 var upload = (0, _multer["default"])({
   storage: storage
 });
-app.post('/compress', upload.array("images", 10), /*#__PURE__*/function () {
+app.post('/compress', upload.single("images"), /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
-    var files, compressedFiles;
+    var files, compressedFiles, fileUrlArr;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             files = req.files;
-            console.log(file); //console.log("aaaaaaa")
-            //res.send("File uploaded");
-
-            _context.next = 4;
-            return (0, _imagemin["default"])(["uploads/*.{jpg,jpeg,png}"], {
+            _context.next = 3;
+            return (0, _imagemin["default"])(['uploads/*.{jpeg,jpg,png,gif,svg}'], {
               destination: "output",
-              plugins: [(0, _imageminJpegtran["default"])(), (0, _imageminPngquant["default"])({
+              plugins: [(0, _imageminPngquant["default"])({
                 quality: [0.6, 0.8]
+              }), (0, _imageminMozjpeg["default"])(), (0, _imageminGiflossy["default"])({
+                lossy: 70
+              }), (0, _imageminSvgo["default"])({
+                plugins: (0, _svgo.extendDefaultPlugins)([{
+                  name: 'removeViewBox',
+                  active: false
+                }])
               })]
             });
 
-          case 4:
+          case 3:
             compressedFiles = _context.sent;
+            //const filepath = path.join(process.cwd()+"/"+compressedFiles[0].destinationPath);
+            //const filename = compressedFiles[0].destinationPath.split("/")[1]
+            console.log(compressedFiles);
+            fileUrlArr = compressedFiles.map(function (file) {
+              var filePath = _path["default"].join(process.cwd() + '/' + file.destinationPath);
 
-          case 5:
+              return filePath;
+            }); //console.log(filepath)
+            //res.send(filepath);
+
+            res.json(JSON.stringify(fileUrlArr));
+
+          case 7:
           case "end":
             return _context.stop();
         }

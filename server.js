@@ -1,13 +1,19 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+
 import express from 'express';
 import bodyparser from 'body-parser';
 import multer from 'multer';
-import imagemin from 'imagemin';
-import imageminJpegtran from 'imagemin-jpegtran';
-import imageminPngquant from 'imagemin-pngquant';
 import path from 'path';
 import urlencoded from 'body-parser';
+//Imagemin 
+import imagemin from 'imagemin';
+import imageminPngquant from 'imagemin-pngquant';
+import imageminMozjpeg from 'imagemin-mozjpeg';
+import imageminGifsicle from 'imagemin-giflossy';
+//import imageminWebp from 'imagemin-webp'
+import imageminSvgo from 'imagemin-svgo';
+import {extendDefaultPlugins} from 'svgo'
 
 const app = express()
 app.use('/uploads', express.static(path.join(__dirname+'/uploads')));
@@ -28,21 +34,35 @@ const upload = multer({
     storage:storage
 })
 
-app.post('/compress', upload.array("images",10), async (req,res)=>{
-    //const files = req.files
-   // console.log(files);
-    //console.log("aaaaaaa")
-    //res.send("File uploaded");
-   /* const compressedFiles = await imagemin(["uploads/*.{jpg,jpeg,png}"], {
+app.post('/compress', upload.single("images"), async (req,res)=>{
+    const files = req.files
+    const compressedFiles = await imagemin(['uploads/*.{jpeg,jpg,png,gif,svg}'], {
         destination: "output",
         plugins: [
-          imageminJpegtran(),
           imageminPngquant({
             quality: [0.6, 0.8]
-          })
+          }),
+          imageminMozjpeg(),
+          imageminGifsicle({lossy: 70}),
+          imageminSvgo({
+            plugins: extendDefaultPlugins([
+                {name: 'removeViewBox', active: false}
+            ])
+            })
         ]
-      });*/
-    res.send("file compressed")
+      });
+      
+      //const filepath = path.join(process.cwd()+"/"+compressedFiles[0].destinationPath);
+      //const filename = compressedFiles[0].destinationPath.split("/")[1]
+      console.log(compressedFiles);
+      let fileUrlArr = compressedFiles.map(file=>{
+            let filePath = path.join(process.cwd()+'/'+file.destinationPath);
+            return filePath;
+      })
+      //console.log(filepath)
+      //res.send(filepath);
+      res.json(JSON.stringify(fileUrlArr));
+      
 })
 
 
