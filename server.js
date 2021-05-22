@@ -6,6 +6,7 @@ import bodyparser from 'body-parser';
 import multer from 'multer';
 import path from 'path';
 import urlencoded from 'body-parser';
+import http from 'http'
 //Imagemin 
 import imagemin from 'imagemin';
 import imageminPngquant from 'imagemin-pngquant';
@@ -16,6 +17,7 @@ import imageminSvgo from 'imagemin-svgo';
 import {extendDefaultPlugins} from 'svgo'
 
 const app = express()
+
 app.use('/uploads', express.static(path.join(__dirname+'/uploads')));
 
 app.use(bodyparser.json())
@@ -34,10 +36,26 @@ const upload = multer({
     storage:storage
 })
 
-app.post('/compress', upload.single("images"), async (req,res)=>{
+app.post('/upload', upload.array("images",10), async (req,res)=>{
     const files = req.files
-    const compressedFiles = await imagemin(['uploads/*.{jpeg,jpg,png,gif,svg}'], {
-        destination: "output",
+    //console.log(files);
+
+      let fileUrlArr =files.map(file=>{
+            let filePath = path.join(file.filename);
+            return filePath;
+      })
+
+      res.json(JSON.stringify(fileUrlArr));
+      
+})
+
+app.get('/download/:imageName', async (req,res)=>{
+    //console.log(req.params.imageName)
+    let imageName = req.params.imageName
+    let path = 'uploads/'+imageName;
+
+    const compressedImage = await imagemin([path], {
+        destination: "compressed",
         plugins: [
           imageminPngquant({
             quality: [0.6, 0.8]
@@ -51,25 +69,17 @@ app.post('/compress', upload.single("images"), async (req,res)=>{
             })
         ]
       });
-      
-      //const filepath = path.join(process.cwd()+"/"+compressedFiles[0].destinationPath);
-      //const filename = compressedFiles[0].destinationPath.split("/")[1]
-      console.log(compressedFiles);
-      let fileUrlArr = compressedFiles.map(file=>{
-            let filePath = path.join(process.cwd()+'/'+file.destinationPath);
-            return filePath;
-      })
-      //console.log(filepath)
-      //res.send(filepath);
-      res.json(JSON.stringify(fileUrlArr));
-      
+      //console.log("compressImage:")
+      //console.log(compressedImage);
+      //res.send("file should start downloading")
+      res.download(process.cwd()+"/"+compressedImage[0].destinationPath)
+    
 })
 
 
 
 app.get('/time',(req,res)=>{
     let time = new Date().toString();
-    //console.log(time)
     res.send(time)
 })
 

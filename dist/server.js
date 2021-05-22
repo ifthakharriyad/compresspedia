@@ -12,6 +12,8 @@ var _multer = _interopRequireDefault(require("multer"));
 
 var _path = _interopRequireDefault(require("path"));
 
+var _http = _interopRequireDefault(require("http"));
+
 var _imagemin = _interopRequireDefault(require("imagemin"));
 
 var _imageminPngquant = _interopRequireDefault(require("imagemin-pngquant"));
@@ -49,17 +51,47 @@ var storage = _multer["default"].diskStorage({
 var upload = (0, _multer["default"])({
   storage: storage
 });
-app.post('/compress', upload.single("images"), /*#__PURE__*/function () {
+app.post('/upload', upload.array("images", 10), /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
-    var files, compressedFiles, fileUrlArr;
+    var files, fileUrlArr;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            files = req.files;
-            _context.next = 3;
-            return (0, _imagemin["default"])(['uploads/*.{jpeg,jpg,png,gif,svg}'], {
-              destination: "output",
+            files = req.files; //console.log(files);
+
+            fileUrlArr = files.map(function (file) {
+              var filePath = _path["default"].join(file.filename);
+
+              return filePath;
+            });
+            res.json(JSON.stringify(fileUrlArr));
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function (_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}());
+app.get('/download/:imageName', /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(req, res) {
+    var imageName, path, compressedImage;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            //console.log(req.params.imageName)
+            imageName = req.params.imageName;
+            path = 'uploads/' + imageName;
+            _context2.next = 4;
+            return (0, _imagemin["default"])([path], {
+              destination: "compressed",
               plugins: [(0, _imageminPngquant["default"])({
                 quality: [0.6, 0.8]
               }), (0, _imageminMozjpeg["default"])(), (0, _imageminGiflossy["default"])({
@@ -72,35 +104,27 @@ app.post('/compress', upload.single("images"), /*#__PURE__*/function () {
               })]
             });
 
-          case 3:
-            compressedFiles = _context.sent;
-            //const filepath = path.join(process.cwd()+"/"+compressedFiles[0].destinationPath);
-            //const filename = compressedFiles[0].destinationPath.split("/")[1]
-            console.log(compressedFiles);
-            fileUrlArr = compressedFiles.map(function (file) {
-              var filePath = _path["default"].join(process.cwd() + '/' + file.destinationPath);
+          case 4:
+            compressedImage = _context2.sent;
+            //console.log("compressImage:")
+            //console.log(compressedImage);
+            //res.send("file should start downloading")
+            res.download(process.cwd() + "/" + compressedImage[0].destinationPath);
 
-              return filePath;
-            }); //console.log(filepath)
-            //res.send(filepath);
-
-            res.json(JSON.stringify(fileUrlArr));
-
-          case 7:
+          case 6:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee);
+    }, _callee2);
   }));
 
-  return function (_x, _x2) {
-    return _ref.apply(this, arguments);
+  return function (_x3, _x4) {
+    return _ref2.apply(this, arguments);
   };
 }());
 app.get('/time', function (req, res) {
-  var time = new Date().toString(); //console.log(time)
-
+  var time = new Date().toString();
   res.send(time);
 });
 var PORT = process.env.PORT || 3001;
