@@ -69,18 +69,8 @@ app.get('/download/:imageName', async (req,res)=>{
             })
         ]
       });
-      //console.log("compressImage:")
-      //console.log(compressedImage);
-      //res.send("file should start downloading")
       res.download(process.cwd()+"/"+compressedImage[0].destinationPath)
     
-})
-
-
-
-app.get('/time',(req,res)=>{
-    let time = new Date().toString();
-    res.send(time)
 })
 
 const PORT = process.env.PORT || 3001

@@ -106,9 +106,6 @@ app.get('/download/:imageName', /*#__PURE__*/function () {
 
           case 4:
             compressedImage = _context2.sent;
-            //console.log("compressImage:")
-            //console.log(compressedImage);
-            //res.send("file should start downloading")
             res.download(process.cwd() + "/" + compressedImage[0].destinationPath);
 
           case 6:
@@ -123,10 +120,6 @@ app.get('/download/:imageName', /*#__PURE__*/function () {
     return _ref2.apply(this, arguments);
   };
 }());
-app.get('/time', function (req, res) {
-  var time = new Date().toString();
-  res.send(time);
-});
 var PORT = process.env.PORT || 3001;
 app.listen(PORT, function () {
   console.log("Server is listening to " + PORT);

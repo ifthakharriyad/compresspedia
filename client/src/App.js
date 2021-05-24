@@ -1,22 +1,12 @@
-import  {useState, useEffect} from 'react'
-
 import './App.css';
-import ImageDropZone from './components/ImageDropZone';
+import DropZoneContainer from './components/DropZoneContainer';
+import NavBar from './components/NavBar'
 
 function App() {
-  const [time, setTime ] = useState("");
-   function updateTime(){
-    fetch("/time").then(res=>res.text())
-    .then(data => setTime(data))
-    .catch(err=>console.log(err))
-  }
-  useEffect(()=>{
-    updateTime()
-  })
   return (
     <div className="App">
-        <h3>{time}</h3>
-        <ImageDropZone/>
+        <NavBar/>
+        <DropZoneContainer/>
     </div>
   );
 }

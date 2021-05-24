@@ -1,6 +1,11 @@
 node_modules
-uploads/
-compressed/
+
+uploads/*
+!uploads/.gitkeep
+
+compressed/*
+!compressed/.gitkeep
+
 # Client gitignore 
 
 # dependencies
