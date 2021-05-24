@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const createStyles = makeStyles(theme=>({
     paper:{
-        padding:"50px"
+        padding:"25px 50px"
     },
     progress:{
         marginBottom:"1em"

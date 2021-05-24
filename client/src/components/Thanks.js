@@ -1,17 +1,17 @@
-import ErrorOutlineSharpIcon from '@material-ui/icons/ErrorOutlineSharp';
+import FavoriteSharpIcon from '@material-ui/icons/FavoriteSharp';
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import ReplayIcon from '@material-ui/icons/Replay';
+import AddSharpIcon from '@material-ui/icons/AddSharp';
 
 const createStyles = makeStyles(theme=>({
     paper:{
         padding:"50px"
     },
-    errorIcon:{
-        fontSize:"4em",
-        marginBottom:".5em"
+    heartIcon:{
+        fontSize:"6em",
+        marginBottom:".1em"
     },
     button:{
         marginTop:"1.5em",
@@ -19,18 +19,19 @@ const createStyles = makeStyles(theme=>({
     }
 }))
 
-export default function Error(props){
+export default function Thanks(){
     const classes = createStyles()
     return(
         <Paper elevation={0} square className={classes.paper}>
-            <ErrorOutlineSharpIcon className={classes.errorIcon} color='error'/>
-            <Typography variant='h5'>{props.massage}</Typography>
+            <FavoriteSharpIcon className={classes.heartIcon}/>
+            <Typography variant='h5'>Thanks!!</Typography>
+            <Typography variant='body1'>Thanks for using Compresspedia.</Typography>
             <Button
                 href="/"
                 variant="contained"
                 className={classes.button}
-                startIcon={<ReplayIcon/>}
-            >Try again</Button>
+                startIcon={<AddSharpIcon/>}
+            >Compress More</Button>
         </Paper>
     )
 }

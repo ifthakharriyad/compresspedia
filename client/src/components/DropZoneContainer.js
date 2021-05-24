@@ -5,10 +5,8 @@ import { makeStyles } from '@material-ui/styles'
 import Progress from './Progress'
 import DropZone from './DropZone'
 import Error from './Error'
-
-// ICONS
-import { Button } from '@material-ui/core';
-
+import UploadedList from './UploadedList'
+import Thanks from './Thanks'
 
 const createStyles = makeStyles((theme)=>({
   dropZoneContainer:{
@@ -24,12 +22,18 @@ export default function DropZoneContainer(){
     const [isUploaded, setIsUploaded] = useState(false)
     const [shouldUploadFiles, SetShouldUploadFiles] = useState(false)
     const [showError, setShowError] = useState(false);
+    const [sayThanks,setSayThanks] = useState(false)
+
 
     let componentToRender;
     if(showError) componentToRender= <Error massage="Ops! Something Went Wrong."/>;
     else{
       if(isUploading) componentToRender = <Progress massage="Uploading..."/>
-      if(isUploaded) componentToRender = <Error massage="Uploaded!!"/>
+      if(isUploaded){
+        if(sayThanks) componentToRender = <Thanks />
+        else componentToRender = <UploadedList images={images} handleDownload={handleDownload}/>
+      } 
+      
       else componentToRender = <DropZone handleChange={handleChange}/>
     }
 
@@ -78,13 +82,13 @@ export default function DropZoneContainer(){
   }
 
     //handle single compressed image download
-    function handleDownload(){
-      console.log(imageUrls)
+    async function handleDownload(){
       for(let i=0;i<imageUrls.length;i++){
         download("/download/"+imageUrls[i])
       }
       clearImages()
       clearImageUrls()
+      setSayThanks(true)
     }
 
     // add imageUrl to the imageUrls state
@@ -108,7 +112,7 @@ export default function DropZoneContainer(){
     
 
     return(
-        <Container maxWidth="sm" className={classes.dropZoneContainer}>
+        <Container maxWidth="xs" className={classes.dropZoneContainer}>
           {
             componentToRender
           }
