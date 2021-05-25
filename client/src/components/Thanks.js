@@ -7,7 +7,8 @@ import AddSharpIcon from '@material-ui/icons/AddSharp';
 
 const createStyles = makeStyles(theme=>({
     paper:{
-        padding:"50px"
+        padding:"50px",
+        backgroundColor:"#fafafa"
     },
     heartIcon:{
         fontSize:"6em",
@@ -24,8 +25,8 @@ export default function Thanks(){
     return(
         <Paper elevation={0} square className={classes.paper}>
             <FavoriteSharpIcon className={classes.heartIcon}/>
-            <Typography variant='h5'>Thanks!!</Typography>
-            <Typography variant='body1'>Thanks for using Compresspedia.</Typography>
+            <Typography variant='h5'>Thanks for using Compresspedia!!</Typography>
+            <Typography variant='body1'>Your download should start autometically.</Typography>
             <Button
                 href="/"
                 variant="contained"

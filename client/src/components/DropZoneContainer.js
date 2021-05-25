@@ -112,7 +112,7 @@ export default function DropZoneContainer(){
     
 
     return(
-        <Container maxWidth="xs" className={classes.dropZoneContainer}>
+        <Container maxWidth="sm" className={classes.dropZoneContainer}>
           {
             componentToRender
           }

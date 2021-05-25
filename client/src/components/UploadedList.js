@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
       borderTop:"none"
     },
     paper:{
-        padding:"25px 50px"
+        padding:"25px 50px",
+        backgroundColor:"#fafafa"
     },
     doneIcon:{
         marginBottom:".3em",
