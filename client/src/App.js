@@ -5,17 +5,19 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import About from './components/About'
 import Footer from './components/Footer'
 import {makeStyles} from '@material-ui/core/styles'
+import classNames from 'classnames'
 
-const createStyles = makeStyles({
-  app:{
-    backgroundColor:"white"
+const createStyles = makeStyles(theme=>({
+  root:{
+    backgroundColor:"white",
+    textAlign:"center"
   }
-})
+}))
 
 function App() {
   const classes = createStyles()
   return (
-    <div className="App" className={classes.app}>
+    <div className={classNames(classes.root, 'App')}>
         <CssBaseline/>
         <NavBar/>
         <DropZoneContainer/>

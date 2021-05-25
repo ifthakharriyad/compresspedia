@@ -6,7 +6,7 @@ import bodyparser from 'body-parser';
 import multer from 'multer';
 import path from 'path';
 import urlencoded from 'body-parser';
-import http from 'http'
+import { unlink } from 'fs'
 //Imagemin 
 import imagemin from 'imagemin';
 import imageminPngquant from 'imagemin-pngquant';
@@ -38,7 +38,6 @@ const upload = multer({
 
 app.post('/upload', upload.array("images",10), async (req,res)=>{
     const files = req.files
-    //console.log(files);
 
       let fileUrlArr =files.map(file=>{
             let filePath = path.join(file.filename);
@@ -50,7 +49,6 @@ app.post('/upload', upload.array("images",10), async (req,res)=>{
 })
 
 app.get('/download/:imageName', async (req,res)=>{
-    //console.log(req.params.imageName)
     let imageName = req.params.imageName
     let path = 'uploads/'+imageName;
 
@@ -69,7 +67,11 @@ app.get('/download/:imageName', async (req,res)=>{
             })
         ]
       });
-      res.download(process.cwd()+"/"+compressedImage[0].destinationPath)
+        res.download(process.cwd()+"/"+compressedImage[0].destinationPath)
+        unlink(path,(err)=>{
+            if(err) throw err;
+            console.log(path+ " hase been deleted")
+        })
     
 })
 

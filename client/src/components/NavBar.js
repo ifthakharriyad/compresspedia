@@ -3,6 +3,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles';
+import { Container } from '@material-ui/core';
 
 const useStyles = makeStyles((theme)=>({
     '@global': {
@@ -17,46 +18,58 @@ const useStyles = makeStyles((theme)=>({
       },
       toolbar: {
         flexWrap: 'wrap',
+        [theme.breakpoints.down(450)]:{
+          paddingLeft:"0px",
+          paddingRight:"0px"
+        }
       },
       toolbarTitle: {
         flexGrow: 0,
         textAlign:"left",
-        [theme.breakpoints.down(600)]: {
+        [theme.breakpoints.down(700)]: {
             flexGrow:1
-        }
+        },
+        
       },
       toolbarSubtitle: {
         flexGrow: 1,
         textAlign:"center",
-        [theme.breakpoints.down(600)]: {
+        [theme.breakpoints.down(700)]: {
             display:"none"
         }
       },
       link: {
         margin: theme.spacing(1, 1.5),
+        [theme.breakpoints.down(450)]:{
+          marginRight:"1px",
+          marginLeft:"4px"
+        }
       }
 }));
 
 export default function NavBar(){
     const classes = useStyles()
     return(
-        <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
-          <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
-            Compresspedia
-          </Typography>
-          <Typography variant='subtitle1' color='inherit' noWrap className={classes.toolbarSubtitle}>
-              Compress images online free
-          </Typography>
-          <nav>
-            <Link variant="button" color="textPrimary" href="#" className={classes.link}>
-              About
-            </Link>
-            <Link variant="button" color="textPrimary" href="#" className={classes.link}>
-              Contact Us
-            </Link>
-          </nav>
-        </Toolbar>
+        <AppBar position="sticky" color="default" elevation={0} className={classes.appBar} id="header">
+          <Container maxWidth="md">
+            <Toolbar className={classes.toolbar}>
+              <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
+                Compresspedia
+              </Typography>
+              <Typography variant='subtitle1' color='inherit' noWrap className={classes.toolbarSubtitle}>
+                Compress images online free
+              </Typography>
+              <nav>
+                <Link variant="button" color="textPrimary" href="#" className={classes.link}>
+                  About
+                </Link>
+                <Link variant="button" color="textPrimary" href="#" className={classes.link}>
+                  Contact
+                </Link>
+              </nav>
+            </Toolbar>
+          </Container>
+        
       </AppBar>
     )
 }

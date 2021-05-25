@@ -14,6 +14,8 @@ var _path = _interopRequireDefault(require("path"));
 
 var _http = _interopRequireDefault(require("http"));
 
+var _fs = require("fs");
+
 var _imagemin = _interopRequireDefault(require("imagemin"));
 
 var _imageminPngquant = _interopRequireDefault(require("imagemin-pngquant"));
@@ -86,7 +88,6 @@ app.get('/download/:imageName', /*#__PURE__*/function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            //console.log(req.params.imageName)
             imageName = req.params.imageName;
             path = 'uploads/' + imageName;
             _context2.next = 4;
@@ -107,8 +108,12 @@ app.get('/download/:imageName', /*#__PURE__*/function () {
           case 4:
             compressedImage = _context2.sent;
             res.download(process.cwd() + "/" + compressedImage[0].destinationPath);
+            (0, _fs.unlink)(path, function (err) {
+              if (err) throw err;
+              console.log(path + " hase been deleted");
+            });
 
-          case 6:
+          case 7:
           case "end":
             return _context2.stop();
         }

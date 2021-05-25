@@ -56,15 +56,15 @@ const useStyles = makeStyles((theme) => ({
 const footers = [
   {
     title: 'Navigation',
-    description: [["Home","/"], ["About","/#about"], ["Contact","mailto:user@email.com"]],
+    description: [["Home","/#header"], ["About","/#about"], ["Contact","mailto:user@email.com"]],
   },
   {
     title: 'Formats',
-    description: [["JPG","/#compress"], ["PNG","/#compress"], ["GIF","/#compress"], ["SVG","/#compress"]],
+    description: [["JPG","/#header"], ["PNG","/#header"], ["GIF","/#header"], ["SVG","/#header"]],
   },
   {
     title: 'Social',
-    description: [["Facebook","facebook.com"], ["Twitter","twitter.com"], ["Instagram","instagram.com"], ["Email","mailto:user@email.com"]],
+    description: [["Facebook","https://facebook.com"], ["Twitter","https://twitter.com"], ["Instagram","https://instagram.com"], ["Email","mailto:user@email.com"]],
   }
 ];
 
@@ -80,7 +80,7 @@ export default function Pricing() {
             <Grid item>
             <Paper className={classes.footerPaper} elevation={0}>
               <Typography variant="h5">Compresspedia</Typography>
-              <Typography variant="subtitle2">Image Compression Made Simple</Typography>
+              <Typography variant="caption">Image Compression Made Simple</Typography>
             </Paper>
             </Grid>
             

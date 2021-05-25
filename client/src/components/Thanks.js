@@ -7,8 +7,7 @@ import AddSharpIcon from '@material-ui/icons/AddSharp';
 
 const createStyles = makeStyles(theme=>({
     paper:{
-        padding:"50px",
-        backgroundColor:"#fafafa"
+        padding:"50px"
     },
     heartIcon:{
         fontSize:"6em",

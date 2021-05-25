@@ -19,7 +19,7 @@ const createStyles = makeStyles({
 export default function About(){
     const classes=createStyles()
     return(
-        <Container maxWidth="md" >
+        <Container maxWidth="md" id="about" >
             < div className={classes.header}>
             <Typography className={classes.headerText} variant="h4" variantMapping="h1">Smart Image Compression Made Simple</Typography>
             <Typography variant="subtitle1">Compress JPG, PNG, SVG, and GIF in one place for free</Typography>

@@ -7,8 +7,7 @@ import ReplayIcon from '@material-ui/icons/Replay';
 
 const createStyles = makeStyles(theme=>({
     paper:{
-        padding:"50px",
-        backgroundColor:"#fafafa"
+        padding:"50px"
     },
     errorIcon:{
         fontSize:"4em",
