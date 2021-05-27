@@ -1,5 +1,7 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 require("core-js/stable");
 
 require("regenerator-runtime/runtime");
@@ -12,9 +14,7 @@ var _multer = _interopRequireDefault(require("multer"));
 
 var _path = _interopRequireDefault(require("path"));
 
-var _http = _interopRequireDefault(require("http"));
-
-var _fs = require("fs");
+var _fs = _interopRequireWildcard(require("fs"));
 
 var _imagemin = _interopRequireDefault(require("imagemin"));
 
@@ -27,6 +27,10 @@ var _imageminGiflossy = _interopRequireDefault(require("imagemin-giflossy"));
 var _imageminSvgo = _interopRequireDefault(require("imagemin-svgo"));
 
 var _svgo = require("svgo");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -60,8 +64,7 @@ app.post('/upload', upload.array("images", 10), /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            files = req.files; //console.log(files);
-
+            files = req.files;
             fileUrlArr = files.map(function (file) {
               var filePath = _path["default"].join(file.filename);
 
@@ -83,14 +86,15 @@ app.post('/upload', upload.array("images", 10), /*#__PURE__*/function () {
 }());
 app.get('/download/:imageName', /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(req, res) {
-    var imageName, path, compressedImage;
+    var imageName, path, compressedPath, compressedImage, file;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             imageName = req.params.imageName;
             path = 'uploads/' + imageName;
-            _context2.next = 4;
+            compressedPath = 'compressed/' + imageName;
+            _context2.next = 5;
             return (0, _imagemin["default"])([path], {
               destination: "compressed",
               plugins: [(0, _imageminPngquant["default"])({
@@ -105,15 +109,21 @@ app.get('/download/:imageName', /*#__PURE__*/function () {
               })]
             });
 
-          case 4:
+          case 5:
             compressedImage = _context2.sent;
-            res.download(process.cwd() + "/" + compressedImage[0].destinationPath);
-            (0, _fs.unlink)(path, function (err) {
-              if (err) throw err;
-              console.log(path + " hase been deleted");
-            });
+            file = _fs["default"].createReadStream(compressedPath);
+            file.on('end', function () {
+              _fs["default"].unlink(path, function () {
+                console.log(path + " hase been deleted!");
+              });
 
-          case 7:
+              _fs["default"].unlink(compressedPath, function () {
+                console.log(compressedPath + " hase been deleted!");
+              });
+            });
+            file.pipe(res);
+
+          case 9:
           case "end":
             return _context2.stop();
         }

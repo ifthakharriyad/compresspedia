@@ -56,11 +56,11 @@ const useStyles = makeStyles((theme) => ({
 const footers = [
   {
     title: 'Navigation',
-    description: [["Home","/#header"], ["About","/#about"], ["Contact","mailto:user@email.com"]],
+    description: [["Home","/"], ["About","/#about"], ["Contact","mailto:user@email.com"]],
   },
   {
     title: 'Formats',
-    description: [["JPG","/#header"], ["PNG","/#header"], ["GIF","/#header"], ["SVG","/#header"]],
+    description: [["JPG","/#compress"], ["PNG","/#compress"], ["GIF","/#compress"], ["SVG","/#compress"]],
   },
   {
     title: 'Social',

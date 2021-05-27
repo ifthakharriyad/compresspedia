@@ -6,7 +6,7 @@ import bodyparser from 'body-parser';
 import multer from 'multer';
 import path from 'path';
 import urlencoded from 'body-parser';
-import { unlink } from 'fs'
+import fs,{ unlink } from 'fs'
 //Imagemin 
 import imagemin from 'imagemin';
 import imageminPngquant from 'imagemin-pngquant';
@@ -51,7 +51,7 @@ app.post('/upload', upload.array("images",10), async (req,res)=>{
 app.get('/download/:imageName', async (req,res)=>{
     let imageName = req.params.imageName
     let path = 'uploads/'+imageName;
-
+    let compressedPath = 'compressed/'+imageName
     const compressedImage = await imagemin([path], {
         destination: "compressed",
         plugins: [
@@ -67,12 +67,17 @@ app.get('/download/:imageName', async (req,res)=>{
             })
         ]
       });
-        res.download(process.cwd()+"/"+compressedImage[0].destinationPath)
-        unlink(path,(err)=>{
-            if(err) throw err;
-            console.log(path+ " hase been deleted")
-        })
-    
+
+        let file = fs.createReadStream(compressedPath);
+        file.on('end', function() {
+        fs.unlink(path, function() {
+            console.log(path+" hase been deleted!")
+        });
+        fs.unlink(compressedPath, function() {
+            console.log(compressedPath+" hase been deleted!")
+        });
+        });
+        file.pipe(res);
 })
 
 const PORT = process.env.PORT || 3001
