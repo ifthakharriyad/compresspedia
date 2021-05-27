@@ -1,9 +1,8 @@
-node_modules
-client
+/node_modules
 
-uploads/*
-!uploads/.gitkeep
+/uploads/*
+!/uploads/.gitkeep
 
-compressed/*
-!compressed/.gitkeep
+/compressed/*
+!/compressed/.gitkeep
 
