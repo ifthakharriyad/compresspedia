@@ -26,9 +26,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel server.js -d dist",
-    "start": "npm run server",
-    "server": "npm run build && node dist/server.js"
+    "build": "babel lib -d dist",
+    "start": "npm run build && node dist/server.js",
+    "serve":"node dist/server.js"
   },
   "author": "Iftekhar Riyad",
   "license": "ISC"
