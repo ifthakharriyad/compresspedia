@@ -6,7 +6,7 @@ import bodyparser from 'body-parser';
 import multer from 'multer';
 import path from 'path';
 import urlencoded from 'body-parser';
-import fs,{ unlink } from 'fs'
+import fs from 'fs'
 //Imagemin 
 import imagemin from 'imagemin';
 import imageminPngquant from 'imagemin-pngquant';
@@ -19,6 +19,7 @@ import {extendDefaultPlugins} from 'svgo'
 const app = express()
 
 app.use('/uploads', express.static(path.join(__dirname+'/uploads')));
+app.use(express.static(path.join(__dirname,'../build')));
 
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended:true}))
@@ -35,6 +36,10 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage:storage
 })
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+});
 
 app.post('/upload', upload.array("images",10), async (req,res)=>{
     const files = req.files
@@ -80,7 +85,7 @@ app.get('/download/:imageName', async (req,res)=>{
         file.pipe(res);
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3000
 
 app.listen(PORT,()=>{
     console.log("Server is listening to "+PORT);
