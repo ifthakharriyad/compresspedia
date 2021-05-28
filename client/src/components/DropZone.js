@@ -10,8 +10,16 @@ const useStyles = makeStyles(()=>({
     },
     container:{
         borderColor:"black",
-        height:"20px",
+        width:"375px",
+        height:"165px",
+        minHeight:"165px",
         borderRadius:"14px"
+    },
+    paragraph:{
+        margin: ".8rem .5rem 1.2rem",
+        fontWeight:"600",
+        fontSize:"1.3rem",
+        lineHeight:"2rem"
     },
     dropZoneContainer:{
         marginTop:"3em",
@@ -32,6 +40,7 @@ export default function DropZone(props){
                 showPreviewsInDropzone={false}
                 onChange={props.handleChange}
                 dropzoneClass={classes.container}
+                dropzoneParagraphClass={classes.paragraph}
             />
             <Typography className={classes.limitSubtitle} variant="subtitile1">* Up to 10 images, max 5 MB each.</Typography>
         </Container>
