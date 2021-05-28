@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme)=>({
       },
       toolbarTitle: {
         fontSize:"1.4em",
-        fontWeight:"510",
+        fontWeight:"410",
         flexGrow: 0,
         textAlign:"left",
         [theme.breakpoints.down(700)]: {
@@ -56,7 +56,7 @@ export default function NavBar(){
           <Container maxWidth="md">
             <Toolbar className={classes.toolbar}>
               <Link href="/" color="inherit" underline="none" className={classes.toolbarTitle}>
-                Compresspedia
+                COMPRESSPEDIA
               </Link>
               <Typography variant='subtitle1' color='inherit' noWrap className={classes.toolbarSubtitle}>
                 Compress images online free

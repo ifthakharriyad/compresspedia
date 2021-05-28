@@ -1,19 +1,10 @@
 import { useState, useEffect } from 'react';
 import download from 'downloadjs'
-import Container from '@material-ui/core/Container'
-import { makeStyles } from '@material-ui/styles'
 import Progress from './Progress'
 import DropZone from './DropZone'
 import Error from './Error'
 import UploadedList from './UploadedList'
 import Thanks from './Thanks'
-
-const createStyles = makeStyles((theme)=>({
-  dropZoneContainer:{
-    marginTop:"3em",
-    marginBottom:"3em"
-  }
-}))
 
 export default function DropZoneContainer(){
     const [images,setImages] = useState([])
@@ -69,7 +60,6 @@ export default function DropZoneContainer(){
         }
     },[shouldUploadFiles, images])
 
-    const classes = createStyles();
     // Pushes single image file to the state
     function handleChange(file){
       if(file.length){
@@ -112,11 +102,11 @@ export default function DropZoneContainer(){
     
 
     return(
-        <Container id="compress" maxWidth="sm" className={classes.dropZoneContainer}>
+        <>
           {
             componentToRender
           }
-        </Container>
+        </>
            
        
     )
