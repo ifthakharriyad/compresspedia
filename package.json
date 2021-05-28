@@ -1,6 +1,9 @@
 {
   "name": "compresspedia",
   "version": "1.0.0",
+  "engines": {
+    "node":"14.17.0"
+  },
   "description": "Image compression made simple",
   "main": "server.js",
   "dependencies": {
