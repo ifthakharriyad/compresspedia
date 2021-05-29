@@ -133,7 +133,7 @@ app.get('/download/:imageName', /*#__PURE__*/function () {
     return _ref2.apply(this, arguments);
   };
 }());
-var PORT = process.env.PORT || 3001;
+var PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
   console.log("Server is listening to " + PORT);
 });
