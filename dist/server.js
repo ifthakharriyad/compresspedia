@@ -34,7 +34,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var app = (0, _express["default"])();
 app.use('/uploads', _express["default"]["static"](_path["default"].join(__dirname + '/uploads')));
-app.use(_express["default"]["static"](_path["default"].join(__dirname, '../client/build')));
 app.use(_bodyParser["default"].json());
 app.use(_bodyParser["default"].urlencoded({
   extended: true
@@ -51,9 +50,6 @@ var storage = _multer["default"].diskStorage({
 
 var upload = (0, _multer["default"])({
   storage: storage
-});
-app.get('/', function (req, res) {
-  res.sendFile(_path["default"].join(__dirname, '../client/build', 'index.html'));
 });
 app.post('/upload', upload.array("images", 10), /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
