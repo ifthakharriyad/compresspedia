@@ -61,6 +61,12 @@ export default function About(){
                     Hooray! You can Compress 10 Images up to 5 MB each at one time.
                     </Typography>
                 </Grid>
+                <Grid item>
+                    <Typography variant="h6">Are GDPR and Privacy policy in place?</Typography>
+                    <Typography variant="body1">
+                    We strictly respect and comply with GDPR and user’s privacy policies, but you do not have to worry as we do not save any data or use cookies for UX purposes. If you are visiting our website which means you “accepting” our terms and conditions, simply you can “reject” by leaving our website. Though we will appreciate your feedback and opinion to help us to provide you with a better experience in future.
+                    </Typography>
+                </Grid>
             </Grid>
         </Container>
     )

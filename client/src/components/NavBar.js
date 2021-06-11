@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme)=>({
       },
       appBar: {
         borderBottom: `1px solid ${theme.palette.divider}`,
+        backgroundColor:"black",
+        color:"white",
+        minHeight:"40px"
       },
       toolbar: {
         flexWrap: 'wrap',
@@ -31,6 +34,7 @@ const useStyles = makeStyles((theme)=>({
         [theme.breakpoints.down(700)]: {
             flexGrow:1
         },
+        color:"white"
         
       },
       toolbarSubtitle: {
@@ -52,23 +56,16 @@ const useStyles = makeStyles((theme)=>({
 export default function NavBar(){
     const classes = useStyles()
     return(
-        <AppBar position="sticky" color="default" elevation={0} className={classes.appBar} id="compress">
+        <AppBar position="sticky" color="black" elevation={0} className={classes.appBar} id="compress">
           <Container maxWidth="md">
-            <Toolbar className={classes.toolbar}>
-              <Link href="/" color="inherit" underline="none" className={classes.toolbarTitle}>
+            <Toolbar variant="dense" className={classes.toolbar}>
+              <Link href="/"  underline="none" className={classes.toolbarTitle}>
                 COMPRESSPEDIA
               </Link>
               <Typography variant='subtitle1' color='inherit' noWrap className={classes.toolbarSubtitle}>
                 Compress images online free
               </Typography>
-              <nav>
-                <Link variant="button" color="textPrimary" href="#about" className={classes.link}>
-                  About
-                </Link>
-                <Link variant="button" color="textPrimary" href="mailto:user@email.com" className={classes.link}>
-                  Contact
-                </Link>
-              </nav>
+
             </Toolbar>
           </Container>
       </AppBar>

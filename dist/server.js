@@ -108,11 +108,11 @@ app.get('/download/:imageName', /*#__PURE__*/function () {
             file = _fs["default"].createReadStream(compressedPath);
             file.on('end', function () {
               _fs["default"].unlink(path, function () {
-                console.log(path + " hase been deleted!");
+                console.log(path.split("/")[1] + " hase been deleted!");
               });
 
               _fs["default"].unlink(compressedPath, function () {
-                console.log(compressedPath + " hase been deleted!");
+                console.log(compressedPath.split("/")[1] + " hase been deleted!");
               });
             });
             file.pipe(res);

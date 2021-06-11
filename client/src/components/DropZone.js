@@ -45,7 +45,7 @@ export default function DropZone(props){
                 dropzoneClass={classes.container}
                 dropzoneParagraphClass={classes.paragraph}
             />
-            <Typography className={classes.limitSubtitle} variant="subtitile2">* Up to 10 images, max 5 MB each.</Typography>
+            <Typography className={classes.limitSubtitle} variant="subtitle2">* Up to 10 images, max 5 MB each.</Typography>
         </Container>
     )
 }

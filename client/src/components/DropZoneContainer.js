@@ -19,8 +19,8 @@ export default function DropZoneContainer(){
     let componentToRender;
     if(showError) componentToRender= <Error massage="Ops! Something Went Wrong."/>;
     else{
-      if(isUploading) componentToRender = <Progress massage="Uploading..."/>
-      if(isUploaded){
+      if(isUploading) { console.log("isUploading is "+isUploading);componentToRender = <Progress massage="Compressing..."/>}
+      else if(isUploaded){
         if(sayThanks) componentToRender = <Thanks />
         else componentToRender = <UploadedList images={images} handleDownload={handleDownload}/>
       } 
@@ -48,6 +48,7 @@ export default function DropZoneContainer(){
             data.forEach(imageUrl=>{
             addImageUrl(imageUrl)
             })
+            console.log("setIsUploading is false")
             setIsUploading(false);
             setIsUploaded(true)
           }else{
@@ -65,7 +66,7 @@ export default function DropZoneContainer(){
       if(file.length){
         images.push(file)
         setImages(file)
-        setIsUploading(true);
+        setIsUploading(true)
         SetShouldUploadFiles(true);
       }
       
@@ -103,6 +104,9 @@ export default function DropZoneContainer(){
 
     return(
         <>
+        {
+          console.log(componentToRender.type.name)
+        }
           {
             componentToRender
           }

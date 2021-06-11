@@ -2,7 +2,7 @@
   "name": "compresspedia",
   "version": "1.0.0",
   "engines": {
-    "node":"14.17.0"
+    "node": "14.17.0"
   },
   "description": "Image compression made simple",
   "main": "server.js",
@@ -12,6 +12,7 @@
     "core-js": "^3.12.1",
     "downloadjs": "^1.4.7",
     "express": "^4.17.1",
+    "ghostscript4js": "^3.2.1",
     "imagemin": "^7.0.1",
     "imagemin-giflossy": "^5.1.10",
     "imagemin-mozjpeg": "^9.0.0",
