@@ -1,19 +1,10 @@
 import { useState, useEffect } from 'react';
 import download from 'downloadjs'
-import Container from '@material-ui/core/Container'
-import { makeStyles } from '@material-ui/styles'
 import Progress from './Progress'
 import DropZone from './DropZone'
 import Error from './Error'
 import UploadedList from './UploadedList'
 import Thanks from './Thanks'
-
-const createStyles = makeStyles((theme)=>({
-  dropZoneContainer:{
-    marginTop:"3em",
-    marginBottom:"3em"
-  }
-}))
 
 export default function DropZoneContainer(){
     const [images,setImages] = useState([])
@@ -28,8 +19,8 @@ export default function DropZoneContainer(){
     let componentToRender;
     if(showError) componentToRender= <Error massage="Ops! Something Went Wrong."/>;
     else{
-      if(isUploading) componentToRender = <Progress massage="Uploading..."/>
-      if(isUploaded){
+      if(isUploading) { console.log("isUploading is "+isUploading);componentToRender = <Progress massage="Compressing..."/>}
+      else if(isUploaded){
         if(sayThanks) componentToRender = <Thanks />
         else componentToRender = <UploadedList images={images} handleDownload={handleDownload}/>
       } 
@@ -57,6 +48,7 @@ export default function DropZoneContainer(){
             data.forEach(imageUrl=>{
             addImageUrl(imageUrl)
             })
+            console.log("setIsUploading is false")
             setIsUploading(false);
             setIsUploaded(true)
           }else{
@@ -69,13 +61,12 @@ export default function DropZoneContainer(){
         }
     },[shouldUploadFiles, images])
 
-    const classes = createStyles();
     // Pushes single image file to the state
     function handleChange(file){
       if(file.length){
         images.push(file)
         setImages(file)
-        setIsUploading(true);
+        setIsUploading(true)
         SetShouldUploadFiles(true);
       }
       
@@ -112,11 +103,11 @@ export default function DropZoneContainer(){
     
 
     return(
-        <Container id="compress" maxWidth="sm" className={classes.dropZoneContainer}>
+        <>
           {
             componentToRender
           }
-        </Container>
+        </>
            
        
     )
