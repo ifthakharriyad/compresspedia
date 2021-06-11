@@ -56,15 +56,11 @@ const useStyles = makeStyles((theme) => ({
 const footers = [
   {
     title: 'Navigation',
-    description: [["Home","/"], ["About","/#about"], ["Contact","mailto:user@email.com"]],
+    description: [["Home","/"], ["About","/#about"], ["Contact","mailto:contact@compresspedia.com"]],
   },
   {
     title: 'Formats',
-    description: [["JPG","/#compress"], ["PNG","/#compress"], ["GIF","/#compress"], ["SVG","/#compress"]],
-  },
-  {
-    title: 'Social',
-    description: [["Facebook","https://facebook.com"], ["Twitter","https://twitter.com"], ["Instagram","https://instagram.com"], ["Email","mailto:user@email.com"]],
+    description: [["JPG","/"], ["PNG","/"], ["GIF","/"], ["SVG","/"]],
   }
 ];
 

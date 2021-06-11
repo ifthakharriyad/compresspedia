@@ -32,7 +32,7 @@ export default function Thanks(){
         <Paper elevation={0} square className={classes.paper}>
             <FavoriteSharpIcon className={classes.heartIcon}/>
             <Typography variant='h5'>Thanks for using Compresspedia!!</Typography>
-            <Typography variant='body1'>Your download should start autometically.</Typography>
+            <Typography variant='body1'>File will download Automatically</Typography>
             <Button
                 href="/"
                 variant="contained"

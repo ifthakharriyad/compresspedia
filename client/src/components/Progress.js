@@ -22,7 +22,7 @@ export default function Progress(props){
     return(
     <Container id="compress" maxWidth="sm" className={classes.dropZoneContainer}>
         <Paper elevation={0} square className={classes.paper}>
-            <CircularProgress className={classes.progress} color="primary" size={50} ></CircularProgress>
+            <CircularProgress className={classes.progress} color="black" size={50} ></CircularProgress>
             <Typography variant='h5'>{props.massage}</Typography>
         </Paper>
     </Container>
