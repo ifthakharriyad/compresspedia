@@ -14,6 +14,7 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
+import Container from '@material-ui/core/Container'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +48,7 @@ export default function UploadedList(props){
       setOpen(!open);
     };
     return(
-        <>  
+        <Container id="compress" maxWidth="sm" className={classes.dropZoneContainer}> 
             <Paper elevation={0} square className={classes.paper}>
                 <DoneOutlineTwoToneIcon className={classes.doneIcon}></DoneOutlineTwoToneIcon>
                 <Typography variant='h5'>Compressed!!</Typography>
@@ -85,7 +86,7 @@ export default function UploadedList(props){
             >
                 Download
             </Button>
-        </>
+        </Container>
         
     )
 }
