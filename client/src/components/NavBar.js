@@ -60,6 +60,7 @@ export default function NavBar(){
           <Container maxWidth="md">
             <Toolbar variant="dense" className={classes.toolbar}>
               <Link href="/"  underline="none" className={classes.toolbarTitle}>
+
                 COMPRESSPEDIA
               </Link>
               <Typography variant='subtitle1' color='inherit' noWrap className={classes.toolbarSubtitle}>
