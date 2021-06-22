@@ -14,6 +14,8 @@ var _path = _interopRequireDefault(require("path"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
+var _child_process = require("child_process");
+
 var _imagemin = _interopRequireDefault(require("imagemin"));
 
 var _imageminPngquant = _interopRequireDefault(require("imagemin-pngquant"));
@@ -51,7 +53,7 @@ var storage = _multer["default"].diskStorage({
 var upload = (0, _multer["default"])({
   storage: storage
 });
-app.post('/upload', upload.array("images", 10), /*#__PURE__*/function () {
+app.post('/upload/images', upload.array("images", 10), /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
     var files, fileUrlArr;
     return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -78,46 +80,22 @@ app.post('/upload', upload.array("images", 10), /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-app.get('/download/:imageName', /*#__PURE__*/function () {
+app.post('/upload/pdfs', upload.array("pdfs", 5), /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(req, res) {
-    var imageName, path, compressedPath, compressedImage, file;
+    var files, fileUrlArr;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            imageName = req.params.imageName;
-            path = 'uploads/' + imageName;
-            compressedPath = 'compressed/' + imageName;
-            _context2.next = 5;
-            return (0, _imagemin["default"])([path], {
-              destination: "compressed",
-              plugins: [(0, _imageminPngquant["default"])({
-                quality: [0.6, 0.8]
-              }), (0, _imageminMozjpeg["default"])(), (0, _imageminGiflossy["default"])({
-                lossy: 70
-              }), (0, _imageminSvgo["default"])({
-                plugins: (0, _svgo.extendDefaultPlugins)([{
-                  name: 'removeViewBox',
-                  active: false
-                }])
-              })]
+            files = req.files;
+            fileUrlArr = files.map(function (file) {
+              var filePath = _path["default"].join(file.filename);
+
+              return filePath;
             });
+            res.json(JSON.stringify(fileUrlArr));
 
-          case 5:
-            compressedImage = _context2.sent;
-            file = _fs["default"].createReadStream(compressedPath);
-            file.on('end', function () {
-              _fs["default"].unlink(path, function () {
-                console.log(path.split("/")[1] + " hase been deleted!");
-              });
-
-              _fs["default"].unlink(compressedPath, function () {
-                console.log(compressedPath.split("/")[1] + " hase been deleted!");
-              });
-            });
-            file.pipe(res);
-
-          case 9:
+          case 3:
           case "end":
             return _context2.stop();
         }
@@ -127,6 +105,110 @@ app.get('/download/:imageName', /*#__PURE__*/function () {
 
   return function (_x3, _x4) {
     return _ref2.apply(this, arguments);
+  };
+}()); // Handle Image compression and download
+
+app.get('/download/image/:imageName', /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(req, res) {
+    var imageName, compressRatio, pngRatio, jpegRatio, gifRatio, path, compressedPath, compressedImage, file;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            imageName = req.params.imageName;
+            compressRatio = Number(req.query.compressRatio);
+            pngRatio = {
+              max: compressRatio / 100,
+              min: compressRatio / 100 - compressRatio / 100 * .2
+            };
+            jpegRatio = compressRatio;
+            gifRatio = Math.ceil(3 - compressRatio / 100 * 3);
+            path = 'uploads/' + imageName;
+            compressedPath = 'compressed/' + imageName;
+            _context3.next = 9;
+            return (0, _imagemin["default"])([path], {
+              destination: "compressed",
+              plugins: [(0, _imageminPngquant["default"])({
+                quality: [pngRatio.min, pngRatio.max]
+              }), (0, _imageminMozjpeg["default"])({
+                quality: jpegRatio
+              }), (0, _imageminGiflossy["default"])({
+                lossy: 70,
+                optimizationLevel: gifRatio
+              }), (0, _imageminSvgo["default"])({
+                plugins: (0, _svgo.extendDefaultPlugins)([{
+                  name: 'removeViewBox',
+                  active: false
+                }])
+              })]
+            });
+
+          case 9:
+            compressedImage = _context3.sent;
+            file = _fs["default"].createReadStream(compressedPath);
+            file.on('end', function () {
+              _fs["default"].unlink(path, function () {
+                console.log(path.split("/")[1] + " has been deleted!");
+              });
+
+              _fs["default"].unlink(compressedPath, function () {
+                console.log(compressedPath.split("/")[1] + " has been deleted!");
+              });
+            });
+            file.pipe(res);
+
+          case 13:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function (_x5, _x6) {
+    return _ref3.apply(this, arguments);
+  };
+}()); // Handles Pdf compression and download
+
+app.get('/download/pdf/:pdfName', /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(req, res) {
+    var pdfName, path, compressedPath;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            pdfName = req.params.pdfName;
+            path = 'uploads/' + pdfName;
+            compressedPath = 'compressed/' + pdfName;
+            (0, _child_process.exec)("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=./".concat(compressedPath, " ./").concat(path), function (error) {
+              if (error) {
+                console.error("Error encountered while compressing ".concat(pdfName));
+              }
+
+              var file = _fs["default"].createReadStream(compressedPath);
+
+              file.on('end', function () {
+                _fs["default"].unlink(path, function () {
+                  console.log(path.split("/")[1] + " hase been deleted!");
+                });
+
+                _fs["default"].unlink(compressedPath, function () {
+                  console.log(compressedPath.split("/")[1] + " hase been deleted!");
+                });
+              });
+              file.pipe(res);
+            });
+
+          case 4:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+
+  return function (_x7, _x8) {
+    return _ref4.apply(this, arguments);
   };
 }());
 var PORT = process.env.PORT || 3001;

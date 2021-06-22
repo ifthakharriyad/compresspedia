@@ -19,8 +19,8 @@ const createStyles = makeStyles(theme=>({
         marginBottom:"1.5em"
     },
     dropZoneContainer:{
-        marginTop:"3em",
-        marginBottom:"3em"
+        marginTop:"5.5em",
+        marginBottom:"7.5em",
       }
 }))
 

@@ -7,7 +7,7 @@ import DoneSharpIcon from '@material-ui/icons/DoneSharp';
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import Collapse from '@material-ui/core/Collapse';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import ListItemText from '@material-ui/core/ListItemText';
 import DoneOutlineTwoToneIcon from '@material-ui/icons/DoneOutlineTwoTone';
 import Paper from '@material-ui/core/Paper'
@@ -15,9 +15,14 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
 import Container from '@material-ui/core/Container'
+import Slider from '@material-ui/core/Slider';
 
 
 const useStyles = makeStyles((theme) => ({
+    dropZoneContainer:{
+        marginTop:"3.5em",
+        marginBottom:"5.5em"
+    },
     listItem:{
         border:"1px solid lightgrey",
         borderRadius:"1px"
@@ -40,37 +45,99 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
+const iOSBoxShadow =
+  '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
+
+
+const IOSSlider = withStyles({
+  root: {
+    color: '#000',
+    height: 2,
+    padding: '10px 0',
+    marginTop:"25px",
+    marginBottom:"10px"
+  },
+  thumb: {
+    height: 28,
+    width: 28,
+    backgroundColor: '#fff',
+    boxShadow: iOSBoxShadow,
+    marginTop: -14,
+    marginLeft: -14,
+    '&:focus, &:hover, &$active': {
+      boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)',
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        boxShadow: iOSBoxShadow,
+      },
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: 'calc(-50% + 12px)',
+    top: -22,
+    '& *': {
+      background: 'transparent',
+      color: '#000',
+    },
+  },
+  track: {
+    height: 2,
+  },
+  rail: {
+    height: 2,
+    opacity: 0.5,
+    backgroundColor: '#bfbfbf',
+  },
+  mark: {
+    backgroundColor: '#bfbfbf',
+    height: 8,
+    width: 1,
+    marginTop: -3,
+  },
+  markActive: {
+    opacity: 1,
+    backgroundColor: 'currentColor',
+  },
+})(Slider);
+
 export default function UploadedList(props){
     const classes= useStyles()
     const [open, setOpen] = useState(false);
+    const [compressRatio, setCompressRatio] = useState(60)
 
     const handleClick = () => {
       setOpen(!open);
     };
+    function handleDownload(){
+        props.handleDownload(compressRatio);
+    }
+    let s = props.files.length>1? "s ":" "
     return(
         <Container id="compress" maxWidth="sm" className={classes.dropZoneContainer}> 
             <Paper elevation={0} square className={classes.paper}>
                 <DoneOutlineTwoToneIcon className={classes.doneIcon}></DoneOutlineTwoToneIcon>
-                <Typography variant='h5'>Compressed!!</Typography>
-                <Typography variant='body1'>{props.images.length+" images Compressed Successfully."}</Typography>
+                <Typography variant='h5'>Uploaded!!</Typography>
+                <Typography variant='body1'>{props.files.length+" "+props.fileType+ s+"uploaded successfully."}</Typography>
             </Paper>
+            
             <List component="nav">
                 <ListItem className={classes.listItem} button onClick={handleClick}>
                     <ListItemIcon>
                         <DoneAllSharpIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Compressed Images" />
+                    <ListItemText primary={`Uploaded ${props.fileType}${s}`} />
                     {open ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                     {
-                        props.images.map((image,index)=>(
+                        props.files.map((file,index)=>(
                             <ListItem key={index} button className={classes.nested}>
                                 <ListItemIcon>
                                     <DoneSharpIcon />
                                 </ListItemIcon>
-                                <ListItemText primary={image.name} />
+                                <ListItemText primary={file.name} />
                             </ListItem>
                         ))
                     }
@@ -79,12 +146,19 @@ export default function UploadedList(props){
                 </Collapse>
             
             </List>
+            {
+                props.fileType==="image"?
+                (
+                    <IOSSlider aria-label="ios slider" value={compressRatio} valueLabelDisplay="on" min={10} max={99} onChange={(event,value)=>setCompressRatio(value)}/>
+                ):null
+            }
+            
             <Button className={classes.doneBottun} variant="contained" 
                     size='large'
                     startIcon={<GetAppRoundedIcon />}
-                    onClick={props.handleDownload}
+                    onClick={handleDownload}
             >
-                Download
+                Compress & Download
             </Button>
         </Container>
         
