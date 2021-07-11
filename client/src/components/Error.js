@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import ReplayIcon from '@material-ui/icons/Replay';
 import Container from '@material-ui/core/Container'
+import { Trans } from '@lingui/macro';
 
 const createStyles = makeStyles(theme=>({
     paper:{
@@ -36,7 +37,7 @@ export default function Error(props){
                 variant="contained"
                 className={classes.button}
                 startIcon={<ReplayIcon/>}
-            >Try again</Button>
+            ><Trans>Try again</Trans></Button>
         </Paper>
     </Container>
     )

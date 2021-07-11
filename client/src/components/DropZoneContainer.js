@@ -8,7 +8,7 @@ import Thanks from './Thanks'
 
 import AddAPhotoSharpIcon from '@material-ui/icons/AddAPhotoSharp';
 import PictureAsPdfSharpIcon from '@material-ui/icons/PictureAsPdfSharp';
-import  Button  from '@material-ui/core/Button';
+import { Trans } from '@lingui/macro';
 
 export default function DropZoneContainer(){
     const [images,setImages] = useState([])
@@ -20,7 +20,7 @@ export default function DropZoneContainer(){
     const [shouldUploadFiles, SetShouldUploadFiles] = useState(false)
     const [showError, setShowError] = useState(false);
     const [sayThanks,setSayThanks] = useState(false);
-    const [fileType,setFileType] = useState("image")
+    const [fileType] = useState("image")
     
 
 
@@ -38,26 +38,30 @@ export default function DropZoneContainer(){
       
       else{
         if(fileType==="image") {
+          let dropzoneImgText = <Trans>Drop JPG, PNG, GIF or Click</Trans>
+          let dropzoneImgSubText = <Trans>* Up to 20 images, max 20 MB each.</Trans>
           componentToRender = <DropZone 
                                 handleChange={handleChange}
                                 accepted={['image/jpeg','image/jpg','image/png', 'image/gif', 'image/svg']}
                                 filesLimit={20}
                                 icon={AddAPhotoSharpIcon}
                                 maxFileSize={20971520}
-                                dropZoneText="Drop JPG, PNG, GIF or Click"
-                                subtitle="* Up to 20 images, max 20 MB each."
+                                dropZoneText={dropzoneImgText}
+                                subtitle={dropzoneImgSubText}
 
                               />
                             }
         if(fileType==="pdf") {
+          let dropzonePdfText = <Trans>Drop PDFs or Click</Trans>
+          let dropzonePdfSubText = <Trans>* Up to 20 pdfs, max 100 MB each.</Trans>
           componentToRender = <DropZone 
                                 handleChange={handleChange}
                                 accepted={['.pdf']}
                                 filesLimit={20}
                                 icon={PictureAsPdfSharpIcon}
                                 maxFileSize={104857600}
-                                dropZoneText="Drop PDFs or Click"
-                                subtitle="* Up to 20 pdfs, max 100 MB each."
+                                dropZoneText={dropzonePdfText}
+                                subtitle={dropzonePdfSubText}
                               />
                             }
       } 
@@ -126,8 +130,6 @@ export default function DropZoneContainer(){
               return [...prevState,name];
             })
           } else if(fileType==="pdf"){
-            console.log("+")
-            console.log(pdfUrls)
             setPdfUrls((prevState)=>{
               return [...prevState,name]
             })
@@ -162,7 +164,6 @@ export default function DropZoneContainer(){
       }
       else if(fileType==="pdf"){
         for(let i=0;i<pdfUrls.length;i++){
-          console.log(pdfUrls[i]);
           download("/download/pdf/"+pdfUrls[i])
         }
       }
@@ -191,17 +192,6 @@ export default function DropZoneContainer(){
         <>
           {
             componentToRender
-          }{
-            /*
-              <Button variant="contained" onClick={()=>{
-            if(fileType==="image"){
-              setFileType("pdf")
-            }
-            else if(fileType==="pdf"){
-              setFileType("image")
-            }
-          }}>{fileType==="image"?"PDF":"Image"}</Button>
-            */
           }
           
         </>
