@@ -4,9 +4,37 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+//Internationalization
+import { i18n } from '@lingui/core'
+import { I18nProvider } from '@lingui/react'
+//import en from './locales/en/messages'
+
+handleLangChange();
+function handleLangChange(lang){
+  if(lang){
+      window.localStorage.setItem("lang",lang);
+      loadLang(lang)
+  }else{
+    if(window.localStorage.getItem("lang")){
+      loadLang(window.localStorage.getItem("lang"))
+    }else{
+      window.localStorage.setItem("lang","en")
+      loadLang(lang);
+    }
+  }
+}
+
+function loadLang(lang){ // or whatever you need it to be
+  const catalog = require(`./locales/${lang}.js`)
+  i18n.load(lang, catalog.messages)
+  i18n.activate(lang)
+}
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <I18nProvider i18n={i18n}>
+      <App onLangChange={handleLangChange}/>
+    </I18nProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

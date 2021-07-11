@@ -16,6 +16,7 @@ import Button from '@material-ui/core/Button'
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
 import Container from '@material-ui/core/Container'
 import Slider from '@material-ui/core/Slider';
+import { Plural, Trans } from '@lingui/macro'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -117,8 +118,17 @@ export default function UploadedList(props){
         <Container id="compress" maxWidth="sm" className={classes.dropZoneContainer}> 
             <Paper elevation={0} square className={classes.paper}>
                 <DoneOutlineTwoToneIcon className={classes.doneIcon}></DoneOutlineTwoToneIcon>
-                <Typography variant='h5'>Uploaded!!</Typography>
-                <Typography variant='body1'>{props.files.length+" "+props.fileType+ s+"uploaded successfully."}</Typography>
+                <Typography variant='h5'><Trans>Uploaded!!</Trans></Typography>
+                <Typography variant='body1'>
+                  <Plural
+                  value={props.files.length}
+                  zero={`No ${props.fileType} uploaded!`}
+                  one={`# ${props.fileType} uploaded successfully!`}
+                  other={`# ${props.fileType}${s} uploaded successfully`}
+                  >
+
+                  </Plural>
+                </Typography>
             </Paper>
             
             <List component="nav">
@@ -158,7 +168,7 @@ export default function UploadedList(props){
                     startIcon={<GetAppRoundedIcon />}
                     onClick={handleDownload}
             >
-                Compress & Download
+                <Trans>Compress and Download</Trans>
             </Button>
         </Container>
         
