@@ -136,7 +136,7 @@ export default function UploadedList(props){
                     <ListItemIcon>
                         <DoneAllSharpIcon/>
                     </ListItemIcon>
-                    <ListItemText primary={`Uploaded ${props.fileType}${s}`} />
+                    <ListItemText primary={`Uploadedd ${props.fileType}${s}`} />
                     {open ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={open} timeout="auto" unmountOnExit>
@@ -157,9 +157,9 @@ export default function UploadedList(props){
             
             </List>
             {
-                props.fileType==="image"?
+                props.fileType==="image" || "video" ?
                 (
-                    <IOSSlider aria-label="ios slider" value={compressRatio} valueLabelDisplay="on" min={10} max={99} onChange={(event,value)=>setCompressRatio(value)}/>
+                    <IOSSlider aria-label="ios slider" value={compressRatio} valueLabelDisplay="on" min={props.compLev.min} max={props.compLev.max} onChange={(event,value)=>setCompressRatio(value)}/>
                 ):null
             }
             

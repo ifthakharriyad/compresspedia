@@ -8,6 +8,8 @@ import Thanks from './Thanks'
 
 import AddAPhotoSharpIcon from '@material-ui/icons/AddAPhotoSharp';
 import PictureAsPdfSharpIcon from '@material-ui/icons/PictureAsPdfSharp';
+import VideoCallSharpIcon from '@material-ui/icons/VideoCallSharp';
+import VideoLibrarySharpIcon from '@material-ui/icons/VideoLibrarySharp';
 import { Trans } from '@lingui/macro';
 
 export default function DropZoneContainer(){
@@ -15,12 +17,14 @@ export default function DropZoneContainer(){
     const [imageUrls, setImageUrls] = useState([]);
     const [pdfs,setPdfs] = useState([]);
     const [pdfUrls, setPdfUrls] = useState([]);
+    const [videos,setVideos] = useState([]);
+    const [videoUrls, setVideoUrls] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
     const [isUploaded, setIsUploaded] = useState(false)
     const [shouldUploadFiles, SetShouldUploadFiles] = useState(false)
     const [showError, setShowError] = useState(false);
     const [sayThanks,setSayThanks] = useState(false);
-    const [fileType] = useState("image")
+    const [fileType,setFileType] = useState("video");
     
 
 
@@ -31,8 +35,9 @@ export default function DropZoneContainer(){
       else if(isUploaded){
         if(sayThanks) componentToRender = <Thanks />
         else{
-          if(fileType==="image") componentToRender = <UploadedList files={images} fileType={fileType} handleDownload={handleDownload}/>
-          else if(fileType==="pdf") componentToRender = <UploadedList files={pdfs} fileType={fileType} handleDownload={handleDownload}/>
+          if(fileType==="image") componentToRender = <UploadedList compLev={{min:10,max:99}} files={images} fileType={fileType} handleDownload={handleDownload}/>
+          else if(fileType==="pdf") componentToRender = <UploadedList  files={pdfs} fileType={fileType} handleDownload={handleDownload}/>
+          else if(fileType==="video") componentToRender = <UploadedList compLev={{min:50,max:99}} files={videos} fileType={fileType} handleDownload={handleDownload}/>
         } 
       } 
       
@@ -51,7 +56,7 @@ export default function DropZoneContainer(){
 
                               />
                             }
-        if(fileType==="pdf") {
+        else if(fileType==="pdf") {
           let dropzonePdfText = <Trans>Drop PDFs or Click</Trans>
           let dropzonePdfSubText = <Trans>* Up to 20 pdfs, max 100 MB each.</Trans>
           componentToRender = <DropZone 
@@ -64,11 +69,25 @@ export default function DropZoneContainer(){
                                 subtitle={dropzonePdfSubText}
                               />
                             }
+        else if(fileType==="video") {
+          let dropzoneVideoText = <Trans>Drop Videos or Click</Trans>
+          let dropzoneVideoSubText = <Trans>* Up to 5 Videos, max 100 MB each.</Trans>
+          componentToRender = <DropZone 
+                                handleChange={handleChange}
+                                accepted={['video/*']}
+                                filesLimit={5}
+                                icon={VideoLibrarySharpIcon}
+                                maxFileSize={104857600}
+                                dropZoneText={dropzoneVideoText}
+                                subtitle={dropzoneVideoSubText}
+                              />
+                            }
       } 
     }
 
     useEffect(()=>{
       if(shouldUploadFiles){
+        console.log(videos)
         handleUpload()
         SetShouldUploadFiles(false);
       }
@@ -98,7 +117,6 @@ export default function DropZoneContainer(){
             }
           }
           else if(fileType==="pdf"){
-            
             for(let i=0; i<pdfs.length;i++){
                 formData.append('pdfs',pdfs[i])
                 response = await fetch('/upload/pdfs',{
@@ -117,7 +135,28 @@ export default function DropZoneContainer(){
               }else{
                 setShowError(true)
               }
-            }
+          }
+
+          else if(fileType==="video"){
+            for(let i=0; i<videos.length;i++){
+                formData.append('videos',videos[i])
+                response = await fetch('/upload/videos',{
+                  method:"POST",
+                  body:formData
+                })
+              } 
+              if(response.status===200){
+                let data =  await response.json();
+                data = JSON.parse(data)
+                data.forEach(url=>{
+                  addUrl(url)
+                })
+                setIsUploading(false);
+                setIsUploaded(true)
+              }else{
+                setShowError(true)
+              }
+          }
           
         }catch{
           setShowError(true)
@@ -133,11 +172,14 @@ export default function DropZoneContainer(){
             setPdfUrls((prevState)=>{
               return [...prevState,name]
             })
-              
+          } else if(fileType==="video"){
+            setVideoUrls((prevState)=>{
+              return [...prevState,name]
+            })
           }
           
         }
-    },[shouldUploadFiles,images,fileType,pdfUrls,pdfs])
+    },[shouldUploadFiles,images,fileType,pdfUrls,pdfs,videos])
 
     // Pushes single image file to the state
     function handleChange(file){
@@ -147,6 +189,9 @@ export default function DropZoneContainer(){
         } 
         else if(fileType==="pdf"){
           setPdfs(file)
+        } 
+        else if(fileType==="video"){
+          setVideos(file)
         } 
         
         setIsUploading(true)
@@ -167,6 +212,11 @@ export default function DropZoneContainer(){
           download("/download/pdf/"+pdfUrls[i])
         }
       }
+      else if(fileType==="video"){
+        for(let i=0;i<videoUrls.length;i++){
+          download("/download/pdf/"+videoUrls[i])
+        }
+      }
       
       clearFiles()
       clearUrls()
@@ -178,11 +228,13 @@ export default function DropZoneContainer(){
     function clearFiles(){
       if(fileType==="image")setImages([]);
       else if(fileType==="pdf") setPdfs([])
+      else if(fileType==="video") setVideos([])
     }
     // clear image urls from imageUrls state
     function clearUrls(){
       if(fileType==="image")setImageUrls([]);
       else if(fileType==="pdf") setPdfUrls([])
+      else if(fileType==="video") setVideoUrls([])
     }
     
     // handles compress by sending formData 
