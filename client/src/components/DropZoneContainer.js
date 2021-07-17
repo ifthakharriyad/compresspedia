@@ -6,13 +6,17 @@ import Error from './Error'
 import UploadedList from './UploadedList'
 import Thanks from './Thanks'
 
+import Typography from '@material-ui/core/Typography';
 import AddAPhotoSharpIcon from '@material-ui/icons/AddAPhotoSharp';
 import PictureAsPdfSharpIcon from '@material-ui/icons/PictureAsPdfSharp';
-import VideoCallSharpIcon from '@material-ui/icons/VideoCallSharp';
 import VideoLibrarySharpIcon from '@material-ui/icons/VideoLibrarySharp';
 import { Trans } from '@lingui/macro';
+import FileTypeButton from './FileTypeButton';
+
+
 
 export default function DropZoneContainer(){
+  const types=['image','pdf','video'];
     const [images,setImages] = useState([])
     const [imageUrls, setImageUrls] = useState([]);
     const [pdfs,setPdfs] = useState([]);
@@ -20,25 +24,29 @@ export default function DropZoneContainer(){
     const [videos,setVideos] = useState([]);
     const [videoUrls, setVideoUrls] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
-    const [isUploaded, setIsUploaded] = useState(false)
+    const [isUploaded, setIsUploaded] = useState(false);
+    const [isCompressing, setIsCompressing] = useState(false)
+    const [isCompressed, setIsCompressed] = useState(false);
     const [shouldUploadFiles, SetShouldUploadFiles] = useState(false)
     const [showError, setShowError] = useState(false);
     const [sayThanks,setSayThanks] = useState(false);
-    const [fileType,setFileType] = useState("video");
-    
+    const [fileTypeIndex,setFileTypeIndex] = useState(0);
+    const [fileType, setFileType] = useState(types[fileTypeIndex])
 
-
+    console.log(fileType)
     let componentToRender;
     if(showError) componentToRender= <Error massage="Ops! Something Went Wrong."/>;
+    else if(sayThanks) componentToRender = <Thanks />
     else{
       if(isUploading) componentToRender = <Progress massage="Uploading..."/>
       else if(isUploaded){
-        if(sayThanks) componentToRender = <Thanks />
-        else{
-          if(fileType==="image") componentToRender = <UploadedList compLev={{min:10,max:99}} files={images} fileType={fileType} handleDownload={handleDownload}/>
-          else if(fileType==="pdf") componentToRender = <UploadedList  files={pdfs} fileType={fileType} handleDownload={handleDownload}/>
-          else if(fileType==="video") componentToRender = <UploadedList compLev={{min:50,max:99}} files={videos} fileType={fileType} handleDownload={handleDownload}/>
-        } 
+          if(isCompressing){
+            componentToRender = <Progress massage="Compressing..."/>
+          }else{
+            if(fileType==="image") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:10,max:99}} files={images} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+            else if(fileType==="pdf") componentToRender = <UploadedList isCompressed={isCompressed}  files={pdfs} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+            else if(fileType==="video") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:50,max:99}} files={videos} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+          }
       } 
       
       else{
@@ -199,22 +207,40 @@ export default function DropZoneContainer(){
       }
       
   }
-
-    //handle single compressed image download
-    async function handleDownload(compressRatio){
+    
+    async function handleCompress(compressRatio){
       if(fileType==="image"){
         for(let i=0;i<imageUrls.length;i++){
-          download("/download/image/"+imageUrls[i]+"?compressRatio="+compressRatio)
+          let response = await fetch("/compress/image?url="+imageUrls[i]+"&compressRatio="+compressRatio)
+          console.log(response)
         }
       }
       else if(fileType==="pdf"){
         for(let i=0;i<pdfUrls.length;i++){
-          download("/download/pdf/"+pdfUrls[i])
+          let response = await fetch("/compress/pdf?url="+pdfUrls[i])
         }
       }
       else if(fileType==="video"){
         for(let i=0;i<videoUrls.length;i++){
-          download("/download/pdf/"+videoUrls[i])
+          let response = await fetch("/compress/video?url="+videoUrls[i]+"&compressRatio="+compressRatio)
+        }
+      }
+    }
+    //handle single compressed image download
+    async function handleDownload(compressRatio){
+      if(fileType==="image"){
+        for(let i=0;i<imageUrls.length;i++){
+          download("/download/image?url="+imageUrls[i])
+        }
+      }
+      else if(fileType==="pdf"){
+        for(let i=0;i<pdfUrls.length;i++){
+          download("/download/pdf?url="+pdfUrls[i])
+        }
+      }
+      else if(fileType==="video"){
+        for(let i=0;i<videoUrls.length;i++){
+          download("/download/video?url="+videoUrls[i])
         }
       }
       
@@ -237,11 +263,16 @@ export default function DropZoneContainer(){
       else if(fileType==="video") setVideoUrls([])
     }
     
-    // handles compress by sending formData 
+    //handles filetype select
+    function handleFileSelect(index){
+      setFileTypeIndex(index);
+      setFileType(types[index])
+    }
     
 
     return(
         <>
+          <FileTypeButton types={types} handleFileSelect={handleFileSelect} currentTypeIndex={fileTypeIndex}/>
           {
             componentToRender
           }
