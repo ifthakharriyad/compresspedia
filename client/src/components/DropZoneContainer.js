@@ -33,7 +33,6 @@ export default function DropZoneContainer(){
     const [fileTypeIndex,setFileTypeIndex] = useState(0);
     const [fileType, setFileType] = useState(types[fileTypeIndex])
 
-    console.log(fileType)
     let componentToRender;
     if(showError) componentToRender= <Error massage="Ops! Something Went Wrong."/>;
     else if(sayThanks) componentToRender = <Thanks />
@@ -41,11 +40,17 @@ export default function DropZoneContainer(){
       if(isUploading) componentToRender = <Progress massage="Uploading..."/>
       else if(isUploaded){
           if(isCompressing){
-            componentToRender = <Progress massage="Compressing..."/>
+            if(isCompressed){
+              if(fileType==="image") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:10,max:99}} files={images} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+              else if(fileType==="pdf") componentToRender = <UploadedList isCompressed={isCompressed}  files={pdfs} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+              else if(fileType==="video") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:50,max:99}} files={videos} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+            }else{
+              componentToRender = <Progress massage="Compressing..."/>
+            }
           }else{
-            if(fileType==="image") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:10,max:99}} files={images} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
-            else if(fileType==="pdf") componentToRender = <UploadedList isCompressed={isCompressed}  files={pdfs} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
-            else if(fileType==="video") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:50,max:99}} files={videos} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+            if(fileType==="image") componentToRender = <UploadedList  compLev={{min:10,max:99}} files={images} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+            else if(fileType==="pdf") componentToRender = <UploadedList  files={pdfs} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+            else if(fileType==="video") componentToRender = <UploadedList compLev={{min:50,max:99}} files={videos} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
           }
       } 
       
@@ -95,7 +100,6 @@ export default function DropZoneContainer(){
 
     useEffect(()=>{
       if(shouldUploadFiles){
-        console.log(videos)
         handleUpload()
         SetShouldUploadFiles(false);
       }
@@ -209,25 +213,40 @@ export default function DropZoneContainer(){
   }
     
     async function handleCompress(compressRatio){
+      setIsCompressing(true)
       if(fileType==="image"){
         for(let i=0;i<imageUrls.length;i++){
-          let response = await fetch("/compress/image?url="+imageUrls[i]+"&compressRatio="+compressRatio)
-          console.log(response)
+          let response = await fetch("/compress/image?imageName="+imageUrls[i]+"&compressRatio="+compressRatio)
+          if(response.ok){
+            setIsCompressed(true)
+          }else{
+            setShowError(true)
+          }
         }
       }
       else if(fileType==="pdf"){
         for(let i=0;i<pdfUrls.length;i++){
-          let response = await fetch("/compress/pdf?url="+pdfUrls[i])
+          let response = await fetch("/compress/pdf?pdfName="+pdfUrls[i])
+          if(response.ok){
+            setIsCompressed(true)
+          }else{
+            setShowError(true)
+          }
         }
       }
       else if(fileType==="video"){
         for(let i=0;i<videoUrls.length;i++){
-          let response = await fetch("/compress/video?url="+videoUrls[i]+"&compressRatio="+compressRatio)
+          let response = await fetch("/compress/video?videoName="+videoUrls[i]+"&compressRatio="+compressRatio)
+          if(response.ok){
+            setIsCompressed(true)
+          }else{
+            setShowError(true)
+          }
         }
       }
     }
     //handle single compressed image download
-    async function handleDownload(compressRatio){
+    async function handleDownload(){
       if(fileType==="image"){
         for(let i=0;i<imageUrls.length;i++){
           download("/download/image?url="+imageUrls[i])

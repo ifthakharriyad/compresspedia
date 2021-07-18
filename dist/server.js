@@ -84,7 +84,7 @@ app.post('/upload/images', upload.array("images", 20), /*#__PURE__*/function () 
 
 app.get('/compress/image', /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(req, res) {
-    var imageName, compressRatio, pngRatio, jpegRatio, gifRatio, _path, compressedPath, compressedImage;
+    var imageName, compressRatio, pngRatio, jpegRatio, gifRatio, _path;
 
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -100,7 +100,7 @@ app.get('/compress/image', /*#__PURE__*/function () {
             jpegRatio = compressRatio;
             gifRatio = Math.ceil(3 - compressRatio / 100 * 3);
             _path = 'uploads/' + imageName;
-            compressedPath = 'compressed/' + imageName;
+            console.log(_path);
             _context2.next = 10;
             return (0, _imagemin["default"])([_path], {
               destination: "compressed",
@@ -120,23 +120,22 @@ app.get('/compress/image', /*#__PURE__*/function () {
             });
 
           case 10:
-            compressedImage = _context2.sent;
             res.sendStatus(200);
-            _context2.next = 18;
+            _context2.next = 17;
             break;
 
-          case 14:
-            _context2.prev = 14;
+          case 13:
+            _context2.prev = 13;
             _context2.t0 = _context2["catch"](0);
             console.error(_context2.t0);
             res.sendStatus(500);
 
-          case 18:
+          case 17:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 14]]);
+    }, _callee2, null, [[0, 13]]);
   }));
 
   return function (_x3, _x4) {
@@ -146,9 +145,9 @@ app.get('/compress/image', /*#__PURE__*/function () {
 
 app.get("/download/image", function (req, res) {
   try {
-    var compressedPath = req.query.url;
+    var compressedPath = "compressed/" + req.query.url;
 
-    var _path2 = "uploads/" + compressedPath.split("/")[1];
+    var _path2 = "uploads/" + req.query.url;
 
     var file = _fs["default"].createReadStream(compressedPath);
 
@@ -212,7 +211,7 @@ app.get('/compress/pdf', function (req, res) {
 
 app.get('/download/pdf', function (req, res) {
   try {
-    var compressedPath = req.query.url;
+    var compressedPath = "compressed/" + req.query.url;
 
     var _path3 = "uploads/" + compressedPath.split("/")[1];
 
@@ -305,7 +304,7 @@ app.get('/compress/video', /*#__PURE__*/function () {
 
 app.get('/download/video', function (req, res) {
   try {
-    var compressedPath = req.query.url;
+    var compressedPath = "compressed/" + req.query.url;
 
     var _path4 = "uploads/" + compressedPath.split("/")[1];
 

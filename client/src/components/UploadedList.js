@@ -147,7 +147,7 @@ export default function UploadedList(props){
                       startIcon={<GetAppSharpIcon />}
                       onClick={()=>handleDownload()}
                     >
-                      <Trans>Download All</Trans>
+                      <Trans>Download</Trans>
                     </Button>
                     </>
                 ):
