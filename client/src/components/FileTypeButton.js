@@ -5,43 +5,43 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import * as Lang from '../modules/Lang'
-import { ButtonGroup } from '@material-ui/core';
+import { ButtonGroup, Container, Typography } from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles'
+import { Trans } from '@lingui/macro';
 
-
-const langsObj = Lang.langs;
-const langs = Object.values(langsObj);
 
 const useStyles = makeStyles((theme)=>({
+    constainer:{
+      marginTop:"20px",
+      marginBottom:"10px"
+    },
     buttonGroup:{
-        backgroundColor:"transparent"
+    border:"1px solid black"
     },
     button:{
-        color:"white"
+        color:"black",
+        border:"none"
     },
     dropDownIcon:{
-        color:"white"
+        color:"black"
     }
 }))
 
-export default function LangButton(props) {
+export default function FileTypeButton(props) {
     const classes = useStyles();
-    let lang = window.localStorage.getItem("lang")
-    let currentLang = langsObj[lang]
+    const types = props.types;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [selectedIndex, setSelectedIndex] = React.useState();
-  const [selectedLang,setSelectedLang] = React.useState(currentLang);
+  const [selectedIndex, setSelectedIndex] = React.useState(props.currentTypeIndex);
 
   useEffect(()=>{
-    for(let i=0;i<langs.length;i++){
-      if(selectedLang===langs[i]){
-        props.onLangChange(Object.keys(langsObj)[i])
+    for(let i=0;i<types.length;i++){
+      if(selectedIndex===i){
+        props.handleFileSelect(i);
       }
     }
-  },[selectedLang,props]);
+  },[selectedIndex,props,types.length]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,14 +52,15 @@ export default function LangButton(props) {
   };
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
-    setSelectedLang(langs[index]);
     handleClose();
   };
 
   return (
-    <div>
-        <ButtonGroup className={classes.buttonGroup}>
-        <Button className={classes.button} disableRipple={true} disableFocusRipple>{selectedLang}</Button>
+    <Container justifycontent='center' alignitems='center' className={classes.constainer}>
+      <Typography variant='h5' gutterBottom><Trans>I want to Compress </Trans></Typography>
+
+      <ButtonGroup className={classes.buttonGroup}>
+        <Button className={classes.button} disableRipple={true} disableFocusRipple>{types[selectedIndex]}</Button>
       <IconButton
         aria-label="more"
         aria-controls="long-menu"
@@ -83,12 +84,11 @@ export default function LangButton(props) {
           },
         }}
       >
-        {langs.map((option,index) => (
+        {types.map((option,index) => (
           <MenuItem key={option} selected={index === selectedIndex} onClick={(event) => handleMenuItemClick(event, index)}>
             {option}
           </MenuItem>
         ))}
       </Menu>
-    </div>
-  );
-}
+    </Container>
+  )}

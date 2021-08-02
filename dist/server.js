@@ -10,7 +10,7 @@ var _bodyParser = _interopRequireDefault(require("body-parser"));
 
 var _multer = _interopRequireDefault(require("multer"));
 
-var _path = _interopRequireDefault(require("path"));
+var _path5 = _interopRequireDefault(require("path"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -30,12 +30,24 @@ var _svgo = require("svgo");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var app = (0, _express["default"])();
-app.use('/uploads', _express["default"]["static"](_path["default"].join(__dirname + '/uploads')));
+app.use('/uploads', _express["default"]["static"](_path5["default"].join(__dirname + '/uploads')));
 app.use(_bodyParser["default"].json());
 app.use(_bodyParser["default"].urlencoded({
   extended: true
@@ -46,29 +58,36 @@ var storage = _multer["default"].diskStorage({
     cb(null, "uploads");
   },
   filename: function filename(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + _path["default"].extname(file.originalname));
+    cb(null, file.fieldname + '-' + Date.now() + _path5["default"].extname(file.originalname));
   }
 });
 
 var upload = (0, _multer["default"])({
   storage: storage
-});
-app.post('/upload/images', upload.array("images", 10), /*#__PURE__*/function () {
+}); //Handles image upload
+
+app.post('/upload/images', upload.array("images", 20), /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
     var files, fileUrlArr;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            files = req.files;
+            _context.next = 2;
+            return req.files;
+
+          case 2:
+            files = _context.sent;
+            //console.log(files);
             fileUrlArr = files.map(function (file) {
-              var filePath = _path["default"].join(file.filename);
+              var filePath = _path5["default"].join(file.filename);
 
               return filePath;
-            });
+            }); //console.log("file url array: "+fileUrlArr)
+
             res.json(JSON.stringify(fileUrlArr));
 
-          case 3:
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -79,43 +98,25 @@ app.post('/upload/images', upload.array("images", 10), /*#__PURE__*/function () 
   return function (_x, _x2) {
     return _ref.apply(this, arguments);
   };
-}());
-app.post('/upload/pdfs', upload.array("pdfs", 5), /*#__PURE__*/function () {
+}()); // Handle Image compression 
+
+app.get('/compress/images', /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(req, res) {
-    var files, fileUrlArr;
+    var imageNameArray, imagePathArray, compressRatio, pngRatio, jpegRatio, gifRatio;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            files = req.files;
-            fileUrlArr = files.map(function (file) {
-              var filePath = _path["default"].join(file.filename);
+            _context2.prev = 0;
+            imageNameArray = req.query.imageNames;
 
-              return filePath;
+            if (!Array.isArray(imageNameArray)) {
+              imageNameArray = new Array(imageNameArray);
+            }
+
+            imagePathArray = imageNameArray.map(function (imageName) {
+              return 'uploads/' + imageName;
             });
-            res.json(JSON.stringify(fileUrlArr));
-
-          case 3:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x3, _x4) {
-    return _ref2.apply(this, arguments);
-  };
-}()); // Handle Image compression and download
-
-app.get('/download/image/:imageName', /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(req, res) {
-    var imageName, compressRatio, pngRatio, jpegRatio, gifRatio, path, compressedPath, compressedImage, file;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            imageName = req.params.imageName;
             compressRatio = Number(req.query.compressRatio);
             pngRatio = {
               max: compressRatio / 100,
@@ -123,10 +124,8 @@ app.get('/download/image/:imageName', /*#__PURE__*/function () {
             };
             jpegRatio = compressRatio;
             gifRatio = Math.ceil(3 - compressRatio / 100 * 3);
-            path = 'uploads/' + imageName;
-            compressedPath = 'compressed/' + imageName;
-            _context3.next = 9;
-            return (0, _imagemin["default"])([path], {
+            _context2.next = 10;
+            return (0, _imagemin["default"])(_toConsumableArray(imagePathArray), {
               destination: "compressed",
               plugins: [(0, _imageminPngquant["default"])({
                 quality: [pngRatio.min, pngRatio.max]
@@ -143,21 +142,84 @@ app.get('/download/image/:imageName', /*#__PURE__*/function () {
               })]
             });
 
-          case 9:
-            compressedImage = _context3.sent;
-            file = _fs["default"].createReadStream(compressedPath);
-            file.on('end', function () {
-              _fs["default"].unlink(path, function () {
-                console.log(path.split("/")[1] + " has been deleted!");
-              });
-
-              _fs["default"].unlink(compressedPath, function () {
-                console.log(compressedPath.split("/")[1] + " has been deleted!");
-              });
-            });
-            file.pipe(res);
+          case 10:
+            res.sendStatus(200);
+            _context2.next = 17;
+            break;
 
           case 13:
+            _context2.prev = 13;
+            _context2.t0 = _context2["catch"](0);
+            console.error(_context2.t0);
+            res.sendStatus(500);
+
+          case 17:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[0, 13]]);
+  }));
+
+  return function (_x3, _x4) {
+    return _ref2.apply(this, arguments);
+  };
+}()); //Handles image download
+
+app.get("/download/image", function (req, res) {
+  try {
+    var fileName = req.query.url;
+    var compressedPath = "compressed/" + req.query.url;
+
+    var _path = "uploads/" + req.query.url;
+
+    var url = process.cwd() + '/compressed/' + fileName;
+    res.sendFile(url, {
+      headers: {
+        "Content-Disposition": "attachment;filename=".concat(fileName)
+      }
+    }, function (err) {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else {
+        console.log("File send: " + fileName);
+
+        _fs["default"].unlink(_path, function () {
+          console.log(_path.split("/")[1] + " has been deleted from uploads folder!");
+        });
+
+        _fs["default"].unlink(compressedPath, function () {
+          console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
+        });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+}); //Handles pdf upload
+
+app.post('/upload/pdfs', upload.array("pdfs", 20), /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(req, res) {
+    var files, fileUrlArr;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.next = 2;
+            return req.files;
+
+          case 2:
+            files = _context3.sent;
+            fileUrlArr = files.map(function (file) {
+              var filePath = _path5["default"].join(file.filename);
+
+              return filePath;
+            });
+            res.json(JSON.stringify(fileUrlArr));
+
+          case 5:
           case "end":
             return _context3.stop();
         }
@@ -168,38 +230,44 @@ app.get('/download/image/:imageName', /*#__PURE__*/function () {
   return function (_x5, _x6) {
     return _ref3.apply(this, arguments);
   };
-}()); // Handles Pdf compression and download
+}()); // Handles Pdf compression
 
-app.get('/download/pdf/:pdfName', /*#__PURE__*/function () {
+app.get('/compress/pdfs', /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(req, res) {
-    var pdfName, path, compressedPath;
+    var pdfNameArray, _path2, compressedPath;
+
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            pdfName = req.params.pdfName;
-            path = 'uploads/' + pdfName;
-            compressedPath = 'compressed/' + pdfName;
-            (0, _child_process.exec)("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=./".concat(compressedPath, " ./").concat(path), function (error) {
-              if (error) {
-                console.error("Error encountered while compressing ".concat(pdfName));
-              }
-
-              var file = _fs["default"].createReadStream(compressedPath);
-
-              file.on('end', function () {
-                _fs["default"].unlink(path, function () {
-                  console.log(path.split("/")[1] + " hase been deleted!");
-                });
-
-                _fs["default"].unlink(compressedPath, function () {
-                  console.log(compressedPath.split("/")[1] + " hase been deleted!");
+            if (Array.isArray(req.query.pdfNames)) {
+              pdfNameArray = req.query.pdfNames;
+              pdfNameArray.forEach(function (pdfName) {
+                var path = 'uploads/' + pdfName;
+                var compressedPath = 'compressed/' + pdfName;
+                (0, _child_process.execSync)("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=./".concat(compressedPath, " ./").concat(path), function (error) {
+                  if (error) {
+                    console.error("Error encountered while compressing ".concat(pdfName));
+                    res.sendStatus(500);
+                  }
                 });
               });
-              file.pipe(res);
-            });
+              res.sendStatus(200);
+            } else {
+              _path2 = 'uploads/' + req.query.pdfNames;
+              compressedPath = 'compressed/' + req.query.pdfNames;
+              (0, _child_process.exec)("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=./".concat(compressedPath, " ./").concat(_path2), function (error) {
+                if (error) {
+                  console.error("Error encountered while compressing ".concat(pdfName));
+                  res.sendStatus(500);
+                }
 
-          case 4:
+                res.sendStatus(200);
+              });
+            } //let pdfPathArray = pdfNameArray.map(pdfName=>"uploads/"+pdfName)
+
+
+          case 1:
           case "end":
             return _context4.stop();
         }
@@ -210,7 +278,147 @@ app.get('/download/pdf/:pdfName', /*#__PURE__*/function () {
   return function (_x7, _x8) {
     return _ref4.apply(this, arguments);
   };
-}());
+}()); //Handles pdf download
+
+app.get('/download/pdf', function (req, res) {
+  try {
+    var fileName = req.query.url;
+    var compressedPath = "compressed/" + req.query.url;
+
+    var _path3 = "uploads/" + req.query.url;
+
+    var url = process.cwd() + "/" + compressedPath;
+    res.sendFile(url, {
+      headers: {
+        "Content-Disposition": "attachment;filename=".concat(fileName)
+      }
+    }, function (err) {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else {
+        console.log("File send: " + fileName);
+
+        _fs["default"].unlink(_path3, function () {
+          console.log(_path3.split("/")[1] + " has been deleted from uploads folder!");
+        });
+
+        _fs["default"].unlink(compressedPath, function () {
+          console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
+        });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+}); //Handles video upload
+
+app.post('/upload/videos', upload.array("videos", 5), /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(req, res) {
+    var files, fileUrlArr;
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            files = req.files;
+            fileUrlArr = files.map(function (file) {
+              var filePath = _path5["default"].join(file.filename);
+
+              return filePath;
+            });
+            res.json(JSON.stringify(fileUrlArr));
+
+          case 3:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+
+  return function (_x9, _x10) {
+    return _ref5.apply(this, arguments);
+  };
+}()); //Handles video compression
+
+app.get('/compress/videos', /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(req, res) {
+    var videoNameArray, compressRatio, crf, widthScale, heightScale;
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            videoNameArray = req.query.videoNames;
+            compressRatio = Number(req.query.compressRatio);
+            crf = 24 - Math.ceil((compressRatio / 100 - .5) * 2 * 6);
+            widthScale = 0.5 + compressRatio / 2 / 100;
+            heightScale = 0.5 + compressRatio / 2 / 100;
+
+            if (!Array.isArray(videoNameArray)) {
+              videoNameArray = new Array(videoNameArray);
+            }
+
+            videoNameArray.forEach(function (videoName) {
+              var path = 'uploads/' + videoName;
+              var compressedPath = 'compressed/' + videoName;
+              (0, _child_process.execSync)("ffmpeg -i ./".concat(path, " -crf ").concat(crf, " -vf \"scale=iw*").concat(widthScale, ":ih*").concat(heightScale, "\" ./").concat(compressedPath), {
+                timeout: 360000
+              }, function (error) {
+                if (error) {
+                  console.error("Error encountered while compressing ".concat(videoName));
+                  res.sendStatus(500);
+                }
+              });
+            });
+            res.sendStatus(200);
+
+          case 8:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+
+  return function (_x11, _x12) {
+    return _ref6.apply(this, arguments);
+  };
+}()); //Handles video download
+
+app.get('/download/video', function (req, res) {
+  try {
+    var fileName = req.query.url;
+    var compressedPath = "compressed/" + req.query.url;
+
+    var _path4 = "uploads/" + compressedPath.split("/")[1];
+
+    var url = process.cwd() + "/" + compressedPath;
+    res.sendFile(url, {
+      headers: {
+        "Content-Disposition": "attachment;filename=".concat(fileName)
+      }
+    }, function (err) {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else {
+        console.log("File send: " + fileName);
+
+        _fs["default"].unlink(_path4, function () {
+          console.log(_path4.split("/")[1] + " has been deleted from uploads folder!");
+        });
+
+        _fs["default"].unlink(compressedPath, function () {
+          console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
+        });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
 var PORT = process.env.PORT || 3001;
 app.listen(PORT, function () {
   console.log("Server is listening to " + PORT);

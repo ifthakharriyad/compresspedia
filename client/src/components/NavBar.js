@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme)=>({
 export default function NavBar(props){
     const classes = useStyles()
     return(
-        <AppBar position="sticky" color="black" elevation={0} className={classes.appBar} id="compress">
+        <AppBar position="sticky" elevation={0} className={classes.appBar} id="compress">
           <Container maxWidth="md">
             <Toolbar variant="dense" className={classes.toolbar}>
               <Link href="/"  underline="none" className={classes.toolbarTitle}>
