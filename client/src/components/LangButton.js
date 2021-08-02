@@ -41,7 +41,7 @@ export default function LangButton(props) {
         props.onLangChange(Object.keys(langsObj)[i])
       }
     }
-  },[selectedLang]);
+  },[selectedLang,props]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

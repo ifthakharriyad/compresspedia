@@ -19,7 +19,6 @@ import UnfoldLessSharpIcon from '@material-ui/icons/UnfoldLessSharp';
 import Container from '@material-ui/core/Container'
 import Slider from '@material-ui/core/Slider';
 import { Plural, Trans } from '@lingui/macro'
-import Progress from './Progress'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -172,7 +171,7 @@ export default function UploadedList(props){
                       <ListItemIcon>
                           <DoneAllSharpIcon/>
                       </ListItemIcon>
-                      <ListItemText primary={`Uploadedd ${props.fileType}${s}`} />
+                      <ListItemText primary={`Uploaded ${props.fileType}${s}`} />
                       {open ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
                   <Collapse in={open} timeout="auto" unmountOnExit>
@@ -193,7 +192,7 @@ export default function UploadedList(props){
               
               </List>
               {
-                  props.fileType==="image" || "video" ?
+                  (props.fileType==="image") ||(props.fileType==="video") ?
                   (
                       <IOSSlider aria-label="ios slider" value={compressRatio} valueLabelDisplay="on" min={props.compLev.min} max={props.compLev.max} onChange={(event,value)=>setCompressRatio(value)}/>
                   ):null

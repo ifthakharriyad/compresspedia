@@ -19,7 +19,7 @@ function handleLangChange(lang){
       loadLang(window.localStorage.getItem("lang"))
     }else{
       window.localStorage.setItem("lang","en")
-      loadLang(lang);
+      loadLang("en");
     }
   }
 }

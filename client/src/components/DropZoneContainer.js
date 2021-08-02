@@ -6,7 +6,6 @@ import Error from './Error'
 import UploadedList from './UploadedList'
 import Thanks from './Thanks'
 
-import Typography from '@material-ui/core/Typography';
 import AddAPhotoSharpIcon from '@material-ui/icons/AddAPhotoSharp';
 import PictureAsPdfSharpIcon from '@material-ui/icons/PictureAsPdfSharp';
 import VideoLibrarySharpIcon from '@material-ui/icons/VideoLibrarySharp';
@@ -41,9 +40,9 @@ export default function DropZoneContainer(){
       else if(isUploaded){
           if(isCompressing){
             if(isCompressed){
-              if(fileType==="image") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:10,max:99}} files={images} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
-              else if(fileType==="pdf") componentToRender = <UploadedList isCompressed={isCompressed}  files={pdfs} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
-              else if(fileType==="video") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:50,max:99}} files={videos} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
+              if(fileType==="image") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:10,max:99}} files={images} fileType="image" handleDownload={handleDownload} handleCompress={handleCompress}/>
+              else if(fileType==="pdf") componentToRender = <UploadedList isCompressed={isCompressed}  files={pdfs} fileType="pdf" handleDownload={handleDownload} handleCompress={handleCompress}/>
+              else if(fileType==="video") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:50,max:99}} files={videos} fileType="video" handleDownload={handleDownload} handleCompress={handleCompress}/>
             }else{
               componentToRender = <Progress massage="Compressing..."/>
             }
@@ -109,33 +108,33 @@ export default function DropZoneContainer(){
           let response;
           if(fileType==="image"){
             for(let i=0; i<images.length;i++){
-                formData.append('images',images[i]);
-                response = await fetch('/upload/images',{
-                  method:"POST",
-                  body:formData
-                })
-                if(response.status===200){
-                  let data =  await response.json();
-                  data = JSON.parse(data)
-                  data.forEach(url=>{
-                    addUrl(url)
-                  })
-                
-                setIsUploading(false);
-                setIsUploaded(true)
-              }else{
-                setShowError(true)
-              } 
+                formData.append('images',images[i]); 
             }
+            response = await fetch('/upload/images',{
+              method:"POST",
+              body:formData
+            })
+            if(response.status===200){
+              let data =  await response.json();
+              data = JSON.parse(data)
+              data.forEach(url=>{
+                addUrl(url)
+              })
+            
+            setIsUploading(false);
+            setIsUploaded(true)
+          }else{
+            setShowError(true)
+          }
           }
           else if(fileType==="pdf"){
             for(let i=0; i<pdfs.length;i++){
                 formData.append('pdfs',pdfs[i])
-                response = await fetch('/upload/pdfs',{
-                  method:"POST",
-                  body:formData
-                })
-              } 
+              }
+              response = await fetch('/upload/pdfs',{
+                method:"POST",
+                body:formData
+              }) 
               if(response.status===200){
                 let data =  await response.json();
                 data = JSON.parse(data)
@@ -215,33 +214,40 @@ export default function DropZoneContainer(){
     async function handleCompress(compressRatio){
       setIsCompressing(true)
       if(fileType==="image"){
+        let imagesQueryString='' ;
         for(let i=0;i<imageUrls.length;i++){
-          let response = await fetch("/compress/image?imageName="+imageUrls[i]+"&compressRatio="+compressRatio)
+          imagesQueryString = imagesQueryString+"imageNames="+imageUrls[i]+"&";
+        }
+        let response = await fetch("/compress/images?"+imagesQueryString+"compressRatio="+compressRatio)
           if(response.ok){
             setIsCompressed(true)
           }else{
             setShowError(true)
           }
-        }
       }
       else if(fileType==="pdf"){
+        let pdfQueryString='';
         for(let i=0;i<pdfUrls.length;i++){
-          let response = await fetch("/compress/pdf?pdfName="+pdfUrls[i])
-          if(response.ok){
-            setIsCompressed(true)
-          }else{
-            setShowError(true)
-          }
+          if(i===pdfUrls.length) pdfQueryString += "pdfNames="+pdfUrls[i];
+          else pdfQueryString += "pdfNames="+pdfUrls[i]+"&"
+        }
+        let response = await fetch("/compress/pdfs?"+pdfQueryString+"compressRatio="+compressRatio)
+        if(response.ok){
+          setIsCompressed(true)
+        }else{
+          setShowError(true)
         }
       }
       else if(fileType==="video"){
+        let videoQueryString = '';
         for(let i=0;i<videoUrls.length;i++){
-          let response = await fetch("/compress/video?videoName="+videoUrls[i]+"&compressRatio="+compressRatio)
-          if(response.ok){
-            setIsCompressed(true)
-          }else{
-            setShowError(true)
-          }
+          videoQueryString+="videoNames="+videoUrls[i]+"&";
+        }
+        let response = await fetch("/compress/videos?"+videoQueryString+"compressRatio="+compressRatio)
+        if(response.ok){
+          setIsCompressed(true)
+        }else{
+          setShowError(true)
         }
       }
     }

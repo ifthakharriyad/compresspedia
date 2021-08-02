@@ -5,15 +5,22 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import { ButtonGroup, Container, Grid, Typography } from '@material-ui/core';
+import { ButtonGroup, Container, Typography } from '@material-ui/core';
 import {makeStyles} from '@material-ui/core/styles'
+import { Trans } from '@lingui/macro';
 
 
 const useStyles = makeStyles((theme)=>({
+    constainer:{
+      marginTop:"20px",
+      marginBottom:"10px"
+    },
     buttonGroup:{
+    border:"1px solid black"
     },
     button:{
-        color:"black"
+        color:"black",
+        border:"none"
     },
     dropDownIcon:{
         color:"black"
@@ -34,7 +41,7 @@ export default function FileTypeButton(props) {
         props.handleFileSelect(i);
       }
     }
-  },[selectedIndex]);
+  },[selectedIndex,props,types.length]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -49,8 +56,8 @@ export default function FileTypeButton(props) {
   };
 
   return (
-    <Container justifycontent='center' alignitems='center'>
-      <Typography variant='h5' gutterBottom>I want to Compress </Typography>
+    <Container justifycontent='center' alignitems='center' className={classes.constainer}>
+      <Typography variant='h5' gutterBottom><Trans>I want to Compress </Trans></Typography>
 
       <ButtonGroup className={classes.buttonGroup}>
         <Button className={classes.button} disableRipple={true} disableFocusRipple>{types[selectedIndex]}</Button>
