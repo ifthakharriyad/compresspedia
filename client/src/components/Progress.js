@@ -12,9 +12,9 @@ const createStyles = makeStyles(theme=>({
         marginBottom:"1em"
     },
     dropZoneContainer:{
-        marginTop:"3em",
-        marginBottom:"3em"
-      }
+        marginTop:"5.5em",
+        marginBottom:"7.5em"
+    }
 }))
 
 export default function Progress(props){

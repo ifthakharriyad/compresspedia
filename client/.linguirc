@@ -1,0 +1,9 @@
+{
+   "catalogs": [{
+       "path": "src/locales/{locale}",
+       "include": "src"
+   }],
+   "sourceLocale": "en",
+   "locales": ["en","bn","bs","zh_CN#Hans","fr","ca","es-ES","cs","da","nl","de","el","bg","et","fi","hi","hu","it","id","ja","ko","lt","lv","ms","nb","pl","pt","ro","ru","sv","th","tr","uk","vi"],
+   "format": "minimal"
+}

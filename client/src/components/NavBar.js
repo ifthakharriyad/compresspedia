@@ -4,6 +4,8 @@ import Typography from '@material-ui/core/Typography'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles';
 import { Container } from '@material-ui/core';
+import { Trans } from '@lingui/macro';
+import LangButton from './LangButton'
 
 const useStyles = makeStyles((theme)=>({
     '@global': {
@@ -46,6 +48,7 @@ const useStyles = makeStyles((theme)=>({
       },
       link: {
         margin: theme.spacing(1, 1.5),
+        color:"white",
         [theme.breakpoints.down(450)]:{
           marginRight:"1px",
           marginLeft:"4px"
@@ -53,20 +56,21 @@ const useStyles = makeStyles((theme)=>({
       }
 }));
 
-export default function NavBar(){
+export default function NavBar(props){
     const classes = useStyles()
     return(
-        <AppBar position="sticky" color="black" elevation={0} className={classes.appBar} id="compress">
+        <AppBar position="sticky" elevation={0} className={classes.appBar} id="compress">
           <Container maxWidth="md">
             <Toolbar variant="dense" className={classes.toolbar}>
               <Link href="/"  underline="none" className={classes.toolbarTitle}>
-
                 COMPRESSPEDIA
               </Link>
               <Typography variant='subtitle1' color='inherit' noWrap className={classes.toolbarSubtitle}>
-                Compress images online free
+                <Trans>Compress images online free</Trans>
               </Typography>
-
+              <nav>
+                <LangButton onLangChange={props.onLangChange}/>
+              </nav>
             </Toolbar>
           </Container>
       </AppBar>

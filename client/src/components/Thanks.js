@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import AddSharpIcon from '@material-ui/icons/AddSharp';
 import Container from '@material-ui/core/Container'
+import { Trans } from '@lingui/macro';
 
 const createStyles = makeStyles(theme=>({
     paper:{
@@ -20,8 +21,8 @@ const createStyles = makeStyles(theme=>({
         marginBottom:"1.5em"
     },
     dropZoneContainer:{
-        marginTop:"3em",
-        marginBottom:"3em"
+        marginTop:"4.5em",
+        marginBottom:"4.5em",
       }
 }))
 
@@ -31,14 +32,14 @@ export default function Thanks(){
     <Container id="compress" maxWidth="sm" className={classes.dropZoneContainer}>
         <Paper elevation={0} square className={classes.paper}>
             <FavoriteSharpIcon className={classes.heartIcon}/>
-            <Typography variant='h5'>Thanks for using Compresspedia!!</Typography>
-            <Typography variant='body1'>File will download Automatically</Typography>
+            <Typography variant='h5'><Trans>Thanks for using Compresspedia!!</Trans></Typography>
+            <Typography variant='body1'><Trans>The file will download automatically.</Trans></Typography>
             <Button
                 href="/"
                 variant="contained"
                 className={classes.button}
                 startIcon={<AddSharpIcon/>}
-            >Compress More</Button>
+            ><Trans>Compress More</Trans></Button>
         </Paper>
     </Container>
     )

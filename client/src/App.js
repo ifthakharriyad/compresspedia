@@ -7,6 +7,7 @@ import Footer from './components/Footer'
 import {makeStyles} from '@material-ui/core/styles'
 import classNames from 'classnames'
 
+
 const createStyles = makeStyles(theme=>({
   root:{
     backgroundColor:"white",
@@ -14,12 +15,12 @@ const createStyles = makeStyles(theme=>({
   }
 }))
 
-function App() {
+function App(props) {
   const classes = createStyles()
   return (
     <div className={classNames(classes.root, 'App')}>
         <CssBaseline/>
-        <NavBar/>
+        <NavBar onLangChange={props.onLangChange}/>
         <DropZoneContainer/>
         <About/>
         <Footer/>
