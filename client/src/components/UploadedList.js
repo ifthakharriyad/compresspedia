@@ -23,7 +23,7 @@ import { Plural, Trans } from '@lingui/macro'
 
 const useStyles = makeStyles((theme) => ({
     dropZoneContainer:{
-        marginTop:"3.5em",
+        marginTop:"1em",
         marginBottom:"5.5em"
     },
     listItem:{
