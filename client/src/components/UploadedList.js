@@ -13,7 +13,9 @@ import DoneOutlineTwoToneIcon from '@material-ui/icons/DoneOutlineTwoTone';
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
+import GetAppSharpIcon from '@material-ui/icons/GetAppSharp';
+import CloudDoneSharpIcon from '@material-ui/icons/CloudDoneSharp';
+import UnfoldLessSharpIcon from '@material-ui/icons/UnfoldLessSharp';
 import Container from '@material-ui/core/Container'
 import Slider from '@material-ui/core/Slider';
 import { Plural, Trans } from '@lingui/macro'
@@ -106,70 +108,106 @@ export default function UploadedList(props){
     const classes= useStyles()
     const [open, setOpen] = useState(false);
     const [compressRatio, setCompressRatio] = useState(60)
+    const [isCompressed] = useState(props.isCompressed);
 
     const handleClick = () => {
       setOpen(!open);
     };
     function handleDownload(){
-        props.handleDownload(compressRatio);
+        props.handleDownload();
+    }
+    function handleCompress(){
+      props.handleCompress(compressRatio)
     }
     let s = props.files.length>1? "s ":" "
     return(
         <Container id="compress" maxWidth="sm" className={classes.dropZoneContainer}> 
-            <Paper elevation={0} square className={classes.paper}>
-                <DoneOutlineTwoToneIcon className={classes.doneIcon}></DoneOutlineTwoToneIcon>
-                <Typography variant='h5'><Trans>Uploaded!!</Trans></Typography>
-                <Typography variant='body1'>
-                  <Plural
-                  value={props.files.length}
-                  zero={`No ${props.fileType} uploaded!`}
-                  one={`# ${props.fileType} uploaded successfully!`}
-                  other={`# ${props.fileType}${s} uploaded successfully`}
-                  >
-
-                  </Plural>
-                </Typography>
-            </Paper>
             
-            <List component="nav">
-                <ListItem className={classes.listItem} button onClick={handleClick}>
-                    <ListItemIcon>
-                        <DoneAllSharpIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary={`Uploaded ${props.fileType}${s}`} />
-                    {open ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                    {
-                        props.files.map((file,index)=>(
-                            <ListItem key={index} button className={classes.nested}>
-                                <ListItemIcon>
-                                    <DoneSharpIcon />
-                                </ListItemIcon>
-                                <ListItemText primary={file.name} />
-                            </ListItem>
-                        ))
-                    }
-                    
-                    </List>
-                </Collapse>
-            
-            </List>
-            {
-                props.fileType==="image"?
+              {
+                isCompressed ?
                 (
-                    <IOSSlider aria-label="ios slider" value={compressRatio} valueLabelDisplay="on" min={10} max={99} onChange={(event,value)=>setCompressRatio(value)}/>
-                ):null
-            }
-            
-            <Button className={classes.doneBottun} variant="contained" 
-                    size='large'
-                    startIcon={<GetAppRoundedIcon />}
-                    onClick={handleDownload}
-            >
-                <Trans>Compress and Download</Trans>
-            </Button>
+                  <>
+                  <Paper elevation={0} square className={classes.paper}>
+                  <DoneOutlineTwoToneIcon className={classes.doneIcon}></DoneOutlineTwoToneIcon>
+                  <Typography variant='h5'><Trans>Compressed!!</Trans></Typography>
+                  <Typography variant='body1'>
+                    <Plural
+                    value={props.files.length}
+                    zero={`No ${props.fileType} compressed!`}
+                    one={`# ${props.fileType} compressed successfully!`}
+                    other={`# ${props.fileType}${s} compressed successfully`}
+                    >
+
+                    </Plural>
+                  </Typography>
+                  </Paper>
+                    <Button className={classes.doneBottun} variant="contained" 
+                      size='large'
+                      startIcon={<GetAppSharpIcon />}
+                      onClick={()=>handleDownload()}
+                    >
+                      <Trans>Download</Trans>
+                    </Button>
+                    </>
+                ):
+                ( 
+                  <>
+                  <Paper elevation={0} square className={classes.paper}>
+                  <CloudDoneSharpIcon className={classes.doneIcon}></CloudDoneSharpIcon>
+                  <Typography variant='h5'><Trans>Uploaded!!</Trans></Typography>
+                  <Typography variant='body1'>
+                    <Plural
+                    value={props.files.length}
+                    zero={`No ${props.fileType} uploaded!`}
+                    one={`# ${props.fileType} uploaded successfully!`}
+                    other={`# ${props.fileType}${s} uploaded successfully`}
+                    >
+
+                    </Plural>
+                  </Typography>
+                  </Paper>
+                  <List component="nav">
+                  <ListItem className={classes.listItem} button onClick={handleClick}>
+                      <ListItemIcon>
+                          <DoneAllSharpIcon/>
+                      </ListItemIcon>
+                      <ListItemText primary={`Uploaded ${props.fileType}${s}`} />
+                      {open ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={open} timeout="auto" unmountOnExit>
+                      <List component="div" disablePadding>
+                      {
+                          props.files.map((file,index)=>(
+                              <ListItem key={index} button className={classes.nested}>
+                                  <ListItemIcon>
+                                      <DoneSharpIcon />
+                                  </ListItemIcon>
+                                  <ListItemText primary={file.name} />
+                              </ListItem>
+                          ))
+                      }
+                      
+                      </List>
+                  </Collapse>
+              
+              </List>
+              {
+                  (props.fileType==="image") ||(props.fileType==="video") ?
+                  (
+                      <IOSSlider aria-label="ios slider" value={compressRatio} valueLabelDisplay="on" min={props.compLev.min} max={props.compLev.max} onChange={(event,value)=>setCompressRatio(value)}/>
+                  ):null
+              }
+              
+              <Button className={classes.doneBottun} variant="contained" 
+                      size='large'
+                      startIcon={<UnfoldLessSharpIcon />}
+                      onClick={()=>handleCompress()}
+              >
+                  <Trans>Compress</Trans>
+              </Button>
+              </>
+                )
+              }
         </Container>
         
     )
