@@ -29,6 +29,12 @@
   color: #61dafb;
 }
 
+p.MuiDropzoneArea-text.MuiTypography-h5.MuiTypography-root {
+  font-size: 1.6em;
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -37,3 +43,10 @@
     transform: rotate(360deg);
   }
 }
+
+  p.MuiDropzoneArea-text.MuiTypography-h5.MuiTypography-root {
+    font-size: 1.6em;
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
