@@ -23,7 +23,7 @@ const useStyles = makeStyles(()=>({
         color:"black"
     },
     dropZoneContainer:{
-        marginTop:"6.5em",
+        marginTop:"1em",
         marginBottom:"6.5em",
       }
 }))
