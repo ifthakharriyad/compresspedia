@@ -1,18 +1,24 @@
 {
   "* Up to 20 images, max 20 MB each.": "* Do 20 slika, maksimalno 20 MB svaka.",
   "* Up to 20 pdfs, max 100 MB each.": "* Do 20 pdfs, maksimalno 100 MB svaki.",
+  "* Up to 5 Videos, max 100 MB each.": "* Do 5 Video, max 100 MB svaki.",
   "Are GDPR and Privacy policy in place?": "Da li postoje GDPR i politike privatnosti?",
   "At CompressPedia we use the latest State of the Art Algorithm to Compress .JPEG, .PNG, GIF, SVG Image files. Simply we reduce the Image size, so it will use minimum bandwidth and load faster.": "U CompressPedia koristimo najnoviji algoritam za sažimanje datoteka .JPEG, .PNG, GIF, SVG. Jednostavno smanjujemo veličinu slike, tako da će ona koristiti minimalnu širinu pojasa i brže se učitavati.",
+  "Compress": "Kompresuj",
   "Compress JPG, PNG, SVG, and GIF in one place for free": "Komprimirajte JPG, PNG, SVG i GIF na jednom mjestu besplatno",
   "Compress More": "Compress More",
   "Compress and Download": "Stisnite i preuzmite",
   "Compress images online free": "Besplatno komprimirajte slike na mreži",
+  "Compressed!!": "Kompresovan",
   "Do you keep my data once I compress the Image?": "Da li čuvate moje podatke nakon što sažim sliku?",
+  "Download": "Preuzmi",
   "Drop JPG, PNG, GIF or Click": "Otpustite JPG, PNG, GIF ili kliknite",
   "Drop PDFs or Click": "Otpustite PDF datoteke ili kliknite",
+  "Drop Videos or Click": "Ispustite videozapise ili kliknite",
   "Hooray! You can Compress 20 Images up to 20 MB each at one time.": "Ura! Možete komprimirati 20 slika do 20 MB odjednom.",
   "How does CompressPedia work?": "Kako CompressPedia djeluje?",
   "How many Images can Compress and what size?": "Koliko slika može komprimovati i koje veličine?",
+  "I want to Compress": "Želim stisnuti",
   "Is it free to Compress images?": "Da li je besplatno komprimirati slike?",
   "Smart Image Compression Made Simple": "Pametna kompresija slike napravljena jednostavno",
   "Thanks for using Compresspedia!!": "Hvala što koristite Compresspedia!",
@@ -29,5 +35,7 @@
   "thatsAll": "To je sve za danas!",
   "today": "Danas je {datum}.",
   "welcome": "Dobro došli %1$s",
-  "{0, plural, zero {No {1} uploaded!} one {# {2} uploaded successfully!} other {# {3}{s} uploaded successfully}}": "{0, plural, zero {Nije preneseno {1}!} one {# {2} je uspješno prenesen!} other {# {3} otpremljeno uspješno}}"
+  "{0, plural, zero {No {1} compressed!} one {# {2} compressed successfully!} other {# {3}{s} compressed successfully}}": "{0, plural, zero {Ne {1} komprimirani!} one {# {2} uspješno komprimiran!} other {# {3} {s} uspješno komprimirani}}",
+  "{0, plural, zero {No {1} uploaded!} one {# {2} uploaded successfully!} other {# {3}s uploaded successfully}}": "{0, plural, zero {Ne {1} upload!} one {# {2} uspješno učitan!} other {# {3} s uspješno učitani}}",
+  "{0, plural, zero {No {1} uploaded!} one {# {2} uploaded successfully!} other {# {3}{s} uploaded successfully}}": "{0, plural, zero {Ne {1} upload!} one {# {2} uspješno učitan!} other {# {3} {s} uspješno učitan}}"
 }
