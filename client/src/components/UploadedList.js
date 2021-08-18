@@ -23,8 +23,8 @@ import { Plural, Trans } from '@lingui/macro'
 
 const useStyles = makeStyles((theme) => ({
     dropZoneContainer:{
-        marginTop:"1em",
-        marginBottom:"5.5em"
+        marginTop:"4em",
+        marginBottom:"6.5em"
     },
     listItem:{
         border:"1px solid lightgrey",
@@ -45,7 +45,11 @@ const useStyles = makeStyles((theme) => ({
     }, 
     doneBottun:{
         margin:"1em"
-    }
+    },
+  compressRatioText:{
+    textAlign:"left",
+    marginTop:"15px"
+  },
   }));
 
 const iOSBoxShadow =
@@ -101,7 +105,7 @@ const IOSSlider = withStyles({
   markActive: {
     opacity: 1,
     backgroundColor: 'currentColor',
-  },
+  }
 })(Slider);
 
 export default function UploadedList(props){
@@ -193,8 +197,10 @@ export default function UploadedList(props){
               </List>
               {
                   (props.fileType==="image") ||(props.fileType==="video") ?
-                  (
+                  ( <>
+                      <Typography variant="subtitle1" className={classes.compressRatioText}>Compress Ratio(in %) :</Typography>
                       <IOSSlider aria-label="ios slider" value={compressRatio} valueLabelDisplay="on" min={props.compLev.min} max={props.compLev.max} onChange={(event,value)=>setCompressRatio(value)}/>
+                    </>
                   ):null
               }
               

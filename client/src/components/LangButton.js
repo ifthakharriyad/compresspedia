@@ -1,6 +1,5 @@
 import React from 'react';
 import {useEffect} from 'react'
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -59,15 +58,7 @@ export default function LangButton(props) {
   return (
     <div>
         <ButtonGroup className={classes.buttonGroup}>
-        <Button className={classes.button} disableRipple={true} disableFocusRipple>{selectedLang}</Button>
-      <IconButton
-        aria-label="more"
-        aria-controls="long-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        <ArrowDropDownIcon className={classes.dropDownIcon} />
-      </IconButton>
+        <Button className={classes.button} disableRipple={true} disableFocusRipple endIcon={<ArrowDropDownIcon className={classes.dropDownIcon} />} onClick={handleClick}>{selectedLang}</Button>
         </ButtonGroup>
        
       <Menu
