@@ -10,7 +10,6 @@ import AddAPhotoSharpIcon from '@material-ui/icons/AddAPhotoSharp';
 import PictureAsPdfSharpIcon from '@material-ui/icons/PictureAsPdfSharp';
 import VideoLibrarySharpIcon from '@material-ui/icons/VideoLibrarySharp';
 import { Trans } from '@lingui/macro';
-import FileTypeButton from './FileTypeButton';
 
 
 
@@ -31,6 +30,8 @@ export default function DropZoneContainer(){
     const [sayThanks,setSayThanks] = useState(false);
     const [fileTypeIndex,setFileTypeIndex] = useState(0);
     const [fileType, setFileType] = useState(types[fileTypeIndex])
+    console.log(fileTypeIndex)
+    console.log(fileType);
 
     let componentToRender;
     if(showError) componentToRender= <Error massage="Ops! Something Went Wrong."/>;
@@ -58,6 +59,7 @@ export default function DropZoneContainer(){
           let dropzoneImgText = <Trans>Drop JPG, PNG, GIF or Click</Trans>
           let dropzoneImgSubText = <Trans>* Up to 20 images, max 20 MB each.</Trans>
           componentToRender = <DropZone 
+                                types={types} handleFileSelect={handleFileSelect} currentTypeIndex={fileTypeIndex}
                                 handleChange={handleChange}
                                 accepted={['image/jpeg','image/jpg','image/png', 'image/gif', 'image/svg']}
                                 filesLimit={20}
@@ -72,6 +74,7 @@ export default function DropZoneContainer(){
           let dropzonePdfText = <Trans>Drop PDFs or Click</Trans>
           let dropzonePdfSubText = <Trans>* Up to 20 pdfs, max 100 MB each.</Trans>
           componentToRender = <DropZone 
+                                types={types} handleFileSelect={handleFileSelect} currentTypeIndex={fileTypeIndex}
                                 handleChange={handleChange}
                                 accepted={['.pdf']}
                                 filesLimit={20}
@@ -85,6 +88,7 @@ export default function DropZoneContainer(){
           let dropzoneVideoText = <Trans>Drop Videos or Click</Trans>
           let dropzoneVideoSubText = <Trans>* Up to 5 Videos, max 100 MB each.</Trans>
           componentToRender = <DropZone 
+                                types={types} handleFileSelect={handleFileSelect} currentTypeIndex={fileTypeIndex}
                                 handleChange={handleChange}
                                 accepted={['video/*']}
                                 filesLimit={5}
@@ -297,7 +301,6 @@ export default function DropZoneContainer(){
 
     return(
         <>
-          <FileTypeButton types={types} handleFileSelect={handleFileSelect} currentTypeIndex={fileTypeIndex}/>
           {
             componentToRender
           }
