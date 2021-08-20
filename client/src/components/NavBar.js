@@ -66,7 +66,7 @@ export default function NavBar(props){
                 COMPRESSPEDIA
               </Link>
               <Typography variant='subtitle1' color='inherit' noWrap className={classes.toolbarSubtitle}>
-                <Trans>Compress images online free</Trans>
+                <Trans>Compress Images, PDF, Video online for free</Trans>
               </Typography>
               <nav>
                 <LangButton onLangChange={props.onLangChange}/>

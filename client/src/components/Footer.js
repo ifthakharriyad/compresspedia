@@ -76,7 +76,7 @@ export default function Pricing() {
             <Grid item>
             <Paper className={classes.footerPaper} elevation={0}>
               <Typography variant="h5">Compresspedia</Typography>
-              <Typography variant="caption">Image Compression Made Simple</Typography>
+              <Typography variant="caption">Compress Images, PDF, Video online for free</Typography>
             </Paper>
             </Grid>
             

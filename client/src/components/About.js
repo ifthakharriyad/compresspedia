@@ -22,14 +22,14 @@ export default function About(){
     return(
         <Container maxWidth="md" id="about" >
             < div className={classes.header}>
-            <Typography className={classes.headerText} variant="h4" variantMapping="h1"><Trans>Smart Image Compression Made Simple</Trans></Typography>
-            <Typography variant="subtitle1"><Trans>Compress JPG, PNG, SVG, and GIF in one place for free</Trans></Typography>
+            <Typography className={classes.headerText} variant="h4" variantMapping="h1"><Trans>Image, PDF, Video Compression Made Simple</Trans></Typography>
+            <Typography variant="subtitle1"><Trans>Compress JPG, PNG, SVG, GIF, PDF, Video in one place for FREE</Trans></Typography>
             </ div>
             <Grid container spacing={2} className={classes.faqGrid}>
                 <Grid item xs={12} >
                     <Typography variant="h6"><Trans>What does CompressPedia do?</Trans></Typography>
                     <Typography variant="body1"><Trans>
-                    We reduce the size of your .JPEG, .PNG, GIF, SVG Images by compressing the file without compromising the quality of your image. 
+                    We reduce the size of your Image (JPEG, PNG, GIF, SVG), PDF, VIdeo by compressing the file without compromising the quality of your image. 
                     </Trans>
                     </Typography>
                 </Grid>
@@ -37,7 +37,7 @@ export default function About(){
                     <Typography variant="h6"><Trans>How does CompressPedia work?</Trans></Typography>
                     <Typography variant="body1">
                     <Trans>
-                    At CompressPedia we use the latest State of the Art Algorithm to Compress .JPEG, .PNG, GIF, SVG Image files. Simply we reduce the Image size, so it will use minimum bandwidth and load faster.
+                    At CompressPedia we use the latest State of Art Algorithm to Compress JPEG, PNG, GIF, SVG Image, PDF, Video files. Simply we reduce the Image, PDF, Video size, so it will use minimum bandwidth and load faster.
                     </Trans>
                     </Typography>
                 </Grid>
@@ -45,12 +45,12 @@ export default function About(){
                     <Typography variant="h6"><Trans>What can I compress?</Trans></Typography>
                     <Typography variant="body1">
                     <Trans>
-                    You can Compress .JPEG, .PNG, GIF, SVG
+                    You can Compress Image (JPEG, PNG, GIF, SVG), PDF, Video
                     </Trans>
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant="h6"><Trans>Do you keep my data once I compress the Image?</Trans></Typography>
+                    <Typography variant="h6"><Trans>Do you keep any data once I compressed the Image, PDF, Video?</Trans></Typography>
                     <Typography variant="body1">
                     <Trans>
                     We do not even touch your data. Only you know what you are compressing. At Compresspedia our Algorithm design to make sure your data is yours and not store any of data with us
@@ -58,19 +58,18 @@ export default function About(){
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant="h6"><Trans>Is it free to Compress images?</Trans></Typography>
+                    <Typography variant="h6"><Trans>Is it free to Compress images, PDF, Video?</Trans></Typography>
                     <Typography variant="body1">
                     <Trans>
-                    YES! YES! YES! and we are making sure you can Compress Images Free forever.
+                    YES! YES! YES! and we are making sure you Compress Images, PDF, Video Free.
                     </Trans>
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant="h6"><Trans>How many Images can Compress and what size?</Trans></Typography>
+                    <Typography variant="h6"><Trans>How many Images, PDF, VIDEO can Compress, and what size?</Trans></Typography>
                     <Typography variant="body1">
                     <Trans>
-                    Hooray! You can Compress 20 Images up to 20 MB each at one time.
-                    </Trans>
+                    You can Compress 20 Images up to 20 MB each, Compress 20 PDF Files of 100 MB each of PDF, and 20 Videos of 100 MB at one time.</Trans>
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
