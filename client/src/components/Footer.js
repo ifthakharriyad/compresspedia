@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const footers = [
   {
     title: 'Navigation',
-    description: [["Home","/"], ["About","/#about"], ["Contact","mailto:contact@compresspedia.com"]],
+    description: [["Home","/"], ["About","#about"], ["Contact","mailto:contact@compresspedia.com"]],
   },
   {
     title: 'Formats',
