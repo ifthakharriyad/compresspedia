@@ -14,6 +14,10 @@ const createStyles = makeStyles(theme=>({
     dropZoneContainer:{
         marginTop:"7em",
         marginBottom:"7.5em"
+    },
+    overline:{
+        display:"block",
+        marginTop:"100px"
     }
 }))
 
@@ -24,6 +28,12 @@ export default function Progress(props){
         <Paper elevation={0} square className={classes.paper}>
             <CircularProgress className={classes.progress} color="black" size={50} ></CircularProgress>
             <Typography variant='h5'>{props.massage}</Typography>
+            {
+                (props.fileTypeIndex===2)?
+                (
+                    <Typography className={classes.overline}  variant="subtitle1" >Note: On average it takes 3-5 minutes per video to compress.</Typography>
+                ):null
+            }
         </Paper>
     </Container>
     )

@@ -45,7 +45,7 @@ export default function DropZoneContainer(){
               else if(fileType==="pdf") componentToRender = <UploadedList isCompressed={isCompressed}  files={pdfs} fileType="pdf" handleDownload={handleDownload} handleCompress={handleCompress}/>
               else if(fileType==="video") componentToRender = <UploadedList isCompressed={isCompressed} compLev={{min:50,max:99}} files={videos} fileType="video" handleDownload={handleDownload} handleCompress={handleCompress}/>
             }else{
-              componentToRender = <Progress massage="Compressing..."/>
+              componentToRender = <Progress massage="Compressing..." fileTypeIndex={fileTypeIndex}/>
             }
           }else{
             if(fileType==="image") componentToRender = <UploadedList  compLev={{min:10,max:99}} files={images} fileType={fileType} handleDownload={handleDownload} handleCompress={handleCompress}/>
