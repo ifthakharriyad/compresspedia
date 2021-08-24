@@ -184,14 +184,15 @@ app.get("/download/image", function (req, res) {
         res.sendStatus(500);
       } else {
         console.log("File send: " + fileName);
+        setTimeout(function () {
+          _fs["default"].unlink(_path, function () {
+            console.log(_path.split("/")[1] + " has been deleted from uploads folder!");
+          });
 
-        _fs["default"].unlink(_path, function () {
-          console.log(_path.split("/")[1] + " has been deleted from uploads folder!");
-        });
-
-        _fs["default"].unlink(compressedPath, function () {
-          console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
-        });
+          _fs["default"].unlink(compressedPath, function () {
+            console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
+          });
+        }, 36000);
       }
     });
   } catch (error) {
@@ -298,14 +299,15 @@ app.get('/download/pdf', function (req, res) {
         res.sendStatus(500);
       } else {
         console.log("File send: " + fileName);
+        setTimeout(function () {
+          _fs["default"].unlink(_path3, function () {
+            console.log(_path3.split("/")[1] + " has been deleted from uploads folder!");
+          });
 
-        _fs["default"].unlink(_path3, function () {
-          console.log(_path3.split("/")[1] + " has been deleted from uploads folder!");
-        });
-
-        _fs["default"].unlink(compressedPath, function () {
-          console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
-        });
+          _fs["default"].unlink(compressedPath, function () {
+            console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
+          });
+        }, 36000);
       }
     });
   } catch (error) {
@@ -404,14 +406,15 @@ app.get('/download/video', function (req, res) {
         res.sendStatus(500);
       } else {
         console.log("File send: " + fileName);
+        setTimeout(function () {
+          _fs["default"].unlink(_path4, function () {
+            console.log(_path4.split("/")[1] + " has been deleted from uploads folder!");
+          });
 
-        _fs["default"].unlink(_path4, function () {
-          console.log(_path4.split("/")[1] + " has been deleted from uploads folder!");
-        });
-
-        _fs["default"].unlink(compressedPath, function () {
-          console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
-        });
+          _fs["default"].unlink(compressedPath, function () {
+            console.log(compressedPath.split("/")[1] + " has been deleted from compressed folder!");
+          });
+        }, 36000);
       }
     });
   } catch (error) {
