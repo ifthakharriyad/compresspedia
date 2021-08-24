@@ -107,58 +107,53 @@ app.get('/compress/images', /*#__PURE__*/function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            imageNameArray = req.query.imageNames;
+            try {
+              imageNameArray = req.query.imageNames;
 
-            if (!Array.isArray(imageNameArray)) {
-              imageNameArray = new Array(imageNameArray);
+              if (!Array.isArray(imageNameArray)) {
+                imageNameArray = new Array(imageNameArray);
+              }
+
+              imagePathArray = imageNameArray.map(function (imageName) {
+                return 'uploads/' + imageName;
+              });
+              compressRatio = Number(req.query.compressRatio);
+              pngRatio = {
+                max: compressRatio / 100,
+                min: compressRatio / 100 - compressRatio / 100 * .2
+              };
+              jpegRatio = compressRatio;
+              gifRatio = Math.ceil(3 - compressRatio / 100 * 3);
+              (0, _imagemin["default"])(_toConsumableArray(imagePathArray), {
+                destination: "compressed",
+                plugins: [(0, _imageminPngquant["default"])({
+                  quality: [pngRatio.min, pngRatio.max]
+                }), (0, _imageminMozjpeg["default"])({
+                  quality: jpegRatio
+                }), (0, _imageminGiflossy["default"])({
+                  lossy: 70,
+                  optimizationLevel: gifRatio
+                }), (0, _imageminSvgo["default"])({
+                  plugins: (0, _svgo.extendDefaultPlugins)([{
+                    name: 'removeViewBox',
+                    active: false
+                  }])
+                })]
+              }).then(function () {
+                return res.sendStatus(200);
+              });
+              ;
+            } catch (error) {
+              console.error(error);
+              res.sendStatus(500);
             }
 
-            imagePathArray = imageNameArray.map(function (imageName) {
-              return 'uploads/' + imageName;
-            });
-            compressRatio = Number(req.query.compressRatio);
-            pngRatio = {
-              max: compressRatio / 100,
-              min: compressRatio / 100 - compressRatio / 100 * .2
-            };
-            jpegRatio = compressRatio;
-            gifRatio = Math.ceil(3 - compressRatio / 100 * 3);
-            _context2.next = 10;
-            return (0, _imagemin["default"])(_toConsumableArray(imagePathArray), {
-              destination: "compressed",
-              plugins: [(0, _imageminPngquant["default"])({
-                quality: [pngRatio.min, pngRatio.max]
-              }), (0, _imageminMozjpeg["default"])({
-                quality: jpegRatio
-              }), (0, _imageminGiflossy["default"])({
-                lossy: 70,
-                optimizationLevel: gifRatio
-              }), (0, _imageminSvgo["default"])({
-                plugins: (0, _svgo.extendDefaultPlugins)([{
-                  name: 'removeViewBox',
-                  active: false
-                }])
-              })]
-            });
-
-          case 10:
-            res.sendStatus(200);
-            _context2.next = 17;
-            break;
-
-          case 13:
-            _context2.prev = 13;
-            _context2.t0 = _context2["catch"](0);
-            console.error(_context2.t0);
-            res.sendStatus(500);
-
-          case 17:
+          case 1:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 13]]);
+    }, _callee2);
   }));
 
   return function (_x3, _x4) {
