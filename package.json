@@ -30,8 +30,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel lib/server.js -d dist",
-    "start": "concurrently \"npm run server\" \" cd client && npm start\"",
+    "build": "babel lib -d dist && cd client && npm run build",
+    "start": "node dist/server.js",
     "server": "npm run build && node dist/server.js"
   },
   "author": "Iftekhar Riyad",

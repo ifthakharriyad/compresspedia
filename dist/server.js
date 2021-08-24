@@ -48,6 +48,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 var app = (0, _express["default"])();
 app.use('/uploads', _express["default"]["static"](_path5["default"].join(__dirname + '/uploads')));
+app.use(_express["default"]["static"](_path5["default"].join(__dirname, '../client/build')));
 app.use(_bodyParser["default"].json());
 app.use(_bodyParser["default"].urlencoded({
   extended: true
@@ -64,6 +65,10 @@ var storage = _multer["default"].diskStorage({
 
 var upload = (0, _multer["default"])({
   storage: storage
+}); // Serves index page
+
+app.get('/', function (req, res) {
+  res.sendFile(_path5["default"].join(__dirname, '../client/build', 'index.html'));
 }); //Handles image upload
 
 app.post('/upload/images', upload.array("images", 20), /*#__PURE__*/function () {
@@ -414,7 +419,7 @@ app.get('/download/video', function (req, res) {
     res.sendStatus(500);
   }
 });
-var PORT = process.env.PORT || 3001;
+var PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
   console.log("Server is listening to " + PORT);
 });
