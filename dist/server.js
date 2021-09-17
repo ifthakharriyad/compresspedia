@@ -1,8 +1,14 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 require("core-js/stable");
 
 require("regenerator-runtime/runtime");
+
+var _util = _interopRequireDefault(require("util"));
+
+var BPromise = _interopRequireWildcard(require("bluebird"));
 
 var _express = _interopRequireDefault(require("express"));
 
@@ -28,6 +34,10 @@ var _imageminSvgo = _interopRequireDefault(require("imagemin-svgo"));
 
 var _svgo = require("svgo");
 
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -45,6 +55,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var execPromise = _util["default"].promisify(_child_process.exec);
 
 var app = (0, _express["default"])();
 app.use('/uploads', _express["default"]["static"](_path5["default"].join(__dirname + '/uploads')));
@@ -169,6 +181,8 @@ app.get("/download/image", function (req, res) {
     var _path = "uploads/" + req.query.url;
 
     var url = process.cwd() + '/compressed/' + fileName;
+    res.setHeader("Content-Type", "image/jpeg");
+    res.setHeader("Content-Dispositon", "attachment; filename=" + 'test.jpeg');
     res.sendFile(url, {
       headers: {
         "Content-Disposition": "attachment;filename=".concat(fileName)
@@ -238,26 +252,21 @@ app.get('/compress/pdfs', /*#__PURE__*/function () {
           case 0:
             if (Array.isArray(req.query.pdfNames)) {
               pdfNameArray = req.query.pdfNames;
-              pdfNameArray.forEach(function (pdfName) {
+              pdfNameArray = pdfNameArray.map(function (pdfName) {
                 var path = 'uploads/' + pdfName;
                 var compressedPath = 'compressed/' + pdfName;
-                (0, _child_process.execSync)("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=./".concat(compressedPath, " ./").concat(path), function (error) {
-                  if (error) {
-                    console.error("Error encountered while compressing ".concat(pdfName));
-                    res.sendStatus(500);
-                  }
-                });
+                return execPromise("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=./".concat(compressedPath, " ./").concat(path));
               });
-              res.sendStatus(200);
+              Promise.all(pdfNameArray).then(function () {
+                res.sendStatus(200);
+              })["catch"](function () {
+                console.error(error);
+                res.sendStatus(500);
+              });
             } else {
               _path2 = 'uploads/' + req.query.pdfNames;
               compressedPath = 'compressed/' + req.query.pdfNames;
-              (0, _child_process.exec)("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=./".concat(compressedPath, " ./").concat(_path2), function (error) {
-                if (error) {
-                  console.error("Error encountered while compressing ".concat(pdfName));
-                  res.sendStatus(500);
-                }
-
+              execPromise("gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=./".concat(compressedPath, " ./").concat(_path2)).then(function () {
                 res.sendStatus(200);
               });
             } //let pdfPathArray = pdfNameArray.map(pdfName=>"uploads/"+pdfName)
@@ -356,19 +365,17 @@ app.get('/compress/videos', /*#__PURE__*/function () {
               videoNameArray = new Array(videoNameArray);
             }
 
-            videoNameArray.forEach(function (videoName) {
+            videoNameArray = videoNameArray.map(function (videoName) {
               var path = 'uploads/' + videoName;
               var compressedPath = 'compressed/' + videoName;
-              (0, _child_process.execSync)("ffmpeg -i ./".concat(path, " -crf ").concat(crf, " -vf \"scale=iw*").concat(widthScale, ":ih*").concat(heightScale, "\" ./").concat(compressedPath), {
-                timeout: 360000
-              }, function (error) {
-                if (error) {
-                  console.error("Error encountered while compressing ".concat(videoName));
-                  res.sendStatus(500);
-                }
-              });
+              return execPromise("ffmpeg -i ./".concat(path, " -crf ").concat(crf, " -vf \"scale=iw*").concat(widthScale, ":ih*").concat(heightScale, "\" ./").concat(compressedPath));
             });
-            res.sendStatus(200);
+            Promise.all(videoNameArray).then(function () {
+              res.sendStatus(200);
+            })["catch"](function (err) {
+              console.log(err);
+              res.sendStatus(500);
+            });
 
           case 8:
           case "end":
