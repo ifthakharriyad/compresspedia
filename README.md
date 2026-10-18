@@ -1,6 +1,5 @@
 # Compresspedia
-
-A full-stack web application to compress images, PDFs, and videos online for free.
+Compresspedia is a privacy-first file compression webapp for JPG, PNG, SVG, PDF, and videos. It supports bulk compression of the supported media types using efficient state-of-art algothims. The project is built with simplicity and minimalism in mind. It is built with React, Express, Imagemin, Ghostscript, and FFmpeg.
 
 ## Features
 
